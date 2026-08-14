@@ -63,9 +63,11 @@
       if (event.target instanceof Node && button.contains(event.target)) return;
       if (audio.paused) audio.play().catch(() => {});
       document.removeEventListener("pointerdown", startOnFirstInteraction);
+      document.removeEventListener("touchend", startOnFirstInteraction);
       document.removeEventListener("keydown", startOnFirstInteraction);
     };
     document.addEventListener("pointerdown", startOnFirstInteraction);
+    document.addEventListener("touchend", startOnFirstInteraction);
     document.addEventListener("keydown", startOnFirstInteraction);
 
     button.addEventListener("click", () => {
