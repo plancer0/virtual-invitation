@@ -6,7 +6,7 @@ interface Props {
 
 const {
   phoneNumber,
-  message = "Hola, confirmo mi asistencia a los 15 años de Rachell",
+  message = "Hola, soy [escribe tu nombre] y confirmo mi asistencia a los 15 años de Rachell",
 } = Astro.props;
 
 const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
