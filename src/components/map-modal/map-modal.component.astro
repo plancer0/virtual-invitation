@@ -1,0 +1,139 @@
+---
+interface Props {
+  googleMapsUrl: string;
+  appleMapsUrl: string;
+  wazeUrl: string;
+  uberUrl: string;
+}
+
+const { googleMapsUrl, appleMapsUrl, wazeUrl, uberUrl } = Astro.props;
+---
+
+<button
+  id="map-modal-trigger"
+  type="button"
+  aria-haspopup="dialog"
+  aria-expanded="false"
+  class="w-[160px] h-[36px] absolute left-1/2 -translate-x-1/2 top-[clamp(12px,4vw,24px)] bg-[#B8860B] text-[#FAF7F0] text-[16px] rounded-[5px] shadow-lg font-baskervville tracking-wide hover:opacity-90 transition-opacity"
+>
+  Ver en mapas
+</button>
+
+<div
+  id="map-modal-backdrop"
+  class="fixed inset-0 z-50 flex items-center justify-center invisible opacity-0 bg-black/40 backdrop-blur-sm px-4"
+  role="presentation"
+>
+  <div
+    id="map-modal-panel"
+    class="w-full max-w-[360px] rounded-[24px] border-2 border-[#4B2882] bg-[#FAF7F0] p-[clamp(20px,6vw,32px)] flex flex-col gap-4 items-center"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="map-modal-title"
+  >
+    <h2
+      id="map-modal-title"
+      class="font-baskervville text-[#3A2A5C] text-[clamp(20px,5vw,28px)] text-center"
+    >
+      ¿Cómo quieres llegar?
+    </h2>
+    <div class="flex flex-col gap-3 w-full">
+      <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" class="map-option"
+        >Google Maps</a
+      >
+      <a href={appleMapsUrl} target="_blank" rel="noopener noreferrer" class="map-option"
+        >Apple Maps</a
+      >
+      <a href={wazeUrl} target="_blank" rel="noopener noreferrer" class="map-option">Waze</a>
+      <a href={uberUrl} target="_blank" rel="noopener noreferrer" class="map-option">Uber</a>
+    </div>
+    <button
+      id="map-modal-close"
+      type="button"
+      class="text-[#3A2A5C] underline text-[clamp(14px,4vw,16px)] font-baskervville mt-1"
+    >
+      Cerrar
+    </button>
+  </div>
+</div>
+
+<style>
+  .map-option {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 14px;
+    border-radius: 9999px;
+    border: 1px solid #4b2882;
+    color: #3a2a5c;
+    font-family: var(--font-baskervville);
+    font-size: clamp(14px, 4vw, 18px);
+    text-decoration: none;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .map-option:hover,
+  .map-option:focus-visible {
+    background-color: #3a2a5c;
+    color: #faf7f0;
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+
+  const trigger = document.getElementById("map-modal-trigger");
+  const backdrop = document.getElementById("map-modal-backdrop");
+  const panel = document.getElementById("map-modal-panel");
+  const closeBtn = document.getElementById("map-modal-close");
+
+  if (trigger && backdrop && panel && closeBtn) {
+    // Move the overlay to a direct child of <body> so a `transform` on any
+    // ancestor (e.g. a scroll-reveal animation) can't hijack its
+    // `position: fixed` containing block and mis-place it off-viewport.
+    document.body.appendChild(backdrop);
+
+    gsap.set(backdrop, { autoAlpha: 0 });
+    gsap.set(panel, { autoAlpha: 0, y: 24, scale: 0.92 });
+
+    let isOpen = false;
+
+    const openModal = () => {
+      if (isOpen) return;
+      isOpen = true;
+      document.documentElement.style.overflow = "hidden";
+      gsap
+        .timeline()
+        .to(backdrop, { autoAlpha: 1, duration: 0.25, ease: "power1.out" })
+        .to(
+          panel,
+          { autoAlpha: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.6)" },
+          "-=0.1",
+        );
+      trigger.setAttribute("aria-expanded", "true");
+    };
+
+    const closeModal = () => {
+      if (!isOpen) return;
+      isOpen = false;
+      document.documentElement.style.overflow = "";
+      gsap
+        .timeline()
+        .to(panel, { autoAlpha: 0, y: 16, scale: 0.94, duration: 0.2, ease: "power1.in" })
+        .to(backdrop, { autoAlpha: 0, duration: 0.2, ease: "power1.in" }, "-=0.1");
+      trigger.setAttribute("aria-expanded", "false");
+    };
+
+    trigger.addEventListener("click", openModal);
+    closeBtn.addEventListener("click", closeModal);
+    backdrop.addEventListener("click", (event) => {
+      if (event.target === backdrop) closeModal();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeModal();
+    });
+  }
+</script>

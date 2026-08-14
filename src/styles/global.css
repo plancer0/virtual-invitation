@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --font-baskervville: var(--baskervville);
+  --font-baskervville-sc: var(--baskervville-sc);
+  --font-meaculpa: var(--meaculpa);
+}
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(24px, 8vw, 80px) 16px;
+  background-image: url("../Images/ilustracion_botanica_color.svg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}

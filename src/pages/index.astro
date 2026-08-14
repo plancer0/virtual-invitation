@@ -1,0 +1,215 @@
+---
+import "../styles/global.css";
+import "../components/frame/frame.component.astro";
+import Frame from "../components/frame/frame.component.astro";
+import Title from "../components/Title/title.component.astro";
+import { Font } from "astro:assets";
+import { Image } from "astro:assets";
+import DateAstroComponent from "../components/date/date.component.astro";
+import MapModal from "../components/map-modal/map-modal.component.astro";
+import RsvpButton from "../components/rsvp-button/rsvp-button.component.astro";
+import MusicPlayer from "../components/music-player/music-player.component.astro";
+import sello_flor from "../Images/sello_flores.png";
+import saco from "../Images/saco.png";
+import vestido from "../Images/vestido.png";
+import brillos from "../Images/brillos.png";
+import cartas from "../Images/cartas.png";
+import mapa from "../Images/mapa.png";
+import decor from "../Images/decor.png";
+
+const date = new Date("2026-11-28T16:30:00");
+
+const venueQuery = encodeURIComponent("Chalet la Rioja, Amatitlán, Guatemala");
+const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${venueQuery}`;
+const appleMapsUrl = `https://maps.apple.com/?q=${venueQuery}`;
+const wazeUrl = `https://waze.com/ul?q=${venueQuery}&navigate=yes`;
+const uberMapsUrl = `https://m.uber.com/ul/?action=setPickup&dropoff[formatted_address]=${venueQuery}&dropoff[nickname]=Chalet%20la%20Rioja`;
+
+const rsvpPhoneNumber = "50212345678";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <Font cssVariable="--baskervville" preload />
+    <Font cssVariable="--baskervville-sc" preload />
+
+    <Font cssVariable="--meaculpa" preload />
+
+    <title>Invitacion de Rachell</title>
+  </head>
+  <body>
+    <Frame width="min(750px, 100%)">
+      <Frame
+        padding="clamp(20px, 8vw, 85px)"
+        gap="clamp(20px, 4vw, 36px)"
+        border="2px solid #4B2882"
+        class="justify-center items-center"
+      >
+        <Title
+          color="#000000"
+          fontSize="clamp(28px, 7vw, 48px)"
+          fontFamily="var(--font-baskervville-sc)"
+          class="text-center reveal"
+        >
+          Estas <br /> cordialmente <br /> invitado
+        </Title>
+        <Image
+          src={sello_flor}
+          width={200}
+          height={200}
+          alt="Sello con decoracion floral"
+          class="w-[clamp(120px,32vw,200px)] h-auto reveal-stamp"
+        />
+        <div
+          class="reveal flex w-full justify-center items-center flex-col gap-6 px-[clamp(16px,6vw,58px)] pt-0"
+        >
+          <Title fontSize="clamp(28px, 7vw, 48px)"> 15 Años de </Title>
+          <Title
+            fontSize="clamp(48px, 16vw, 128px)"
+            fontFamily="var(--font-meaculpa)"
+            color="#3A2A5C"
+          >
+            Rachell
+          </Title>
+          <DateAstroComponent date={date} />
+        </div>
+
+        <div class="reveal flex gap-1 px-[clamp(16px,6vw,58px)] py-[clamp(24px,6vw,60px)] flex-col">
+          <Title fontSize="clamp(24px, 6vw, 40px)">Codigo de vestimenta</Title>
+          <Title fontSize="clamp(22px, 5vw, 36px)" color="#3A2A5C">Gala</Title>
+          <div class="flex flex-nowrap justify-center gap-3 w-full">
+            <Image
+              src={saco}
+              width={250}
+              height={269}
+              alt="Saco de ejemplo"
+              class="w-[clamp(90px,44%,250px)] h-auto shrink-0"
+            />
+            <Image
+              src={vestido}
+              width={250}
+              height={269}
+              alt="Vestido de ejemplo"
+              class="w-[clamp(90px,44%,250px)] h-auto shrink-0"
+            />
+          </div>
+          <Title fontSize="clamp(16px, 4vw, 24px)" color="#3A2A5C"
+            >Nos reservamos estos colores para la quinceañera y su cortejo</Title
+          >
+          <div
+            class="flex flex-wrap h-auto p-5 gap-2.5 justify-center items-center w-full"
+          >
+            <div class="w-[clamp(60px,18vw,100px)] h-[clamp(60px,18vw,100px)] rounded-[9999px] bg-[#C122F1]">
+            </div>
+            <div class="w-[clamp(60px,18vw,100px)] h-[clamp(60px,18vw,100px)] rounded-[9999px] bg-[#72009F]">
+            </div>
+            <div
+              class="w-[clamp(60px,18vw,100px)] h-[clamp(60px,18vw,100px)] rounded-[9999px] bg-cover bg-center bg-no-repeat"
+              style={`background-image: url(${brillos.src})`}
+            >
+            </div>
+          </div>
+        </div>
+        <div class="reveal flex flex-col gap-2 p-[clamp(16px,6vw,58px)] justify-center items-center">
+          <Title fontSize="clamp(24px, 6vw, 40px)">Lluvia de sobres</Title>
+          <Title fontSize="clamp(16px, 4vw, 24px)" color="#3A2A5C"
+            >Si deseas obsequiarnos algo, contarás con un buzón a la entrada del
+            salón.</Title
+          >
+          <Image
+            src={cartas}
+            width={242}
+            height={242}
+            alt="Ilustracion de cartas"
+            class="w-[clamp(140px,36vw,242px)] h-auto"
+          />
+        </div>
+        <Title fontSize="clamp(24px, 6vw, 40px)" class="reveal">Como llegar</Title>
+        <div class="reveal relative w-full max-w-[470px]">
+          <Image
+            src={mapa}
+            width={470}
+            height={355}
+            alt="Ilustracion de cartas"
+            class="w-full h-auto"
+          />
+          <MapModal
+            googleMapsUrl={googleMapsUrl}
+            appleMapsUrl={appleMapsUrl}
+            wazeUrl={wazeUrl}
+            uberUrl={uberMapsUrl}
+          />
+        </div>
+
+        <div class="reveal flex flex-col gap-2 p-[clamp(16px,6vw,58px)] justify-center items-center">
+          <Title fontSize="clamp(24px, 6vw, 40px)">Agradecimientos</Title>
+          <Title
+            fontFamily="var(--font-baskervville-sc)"
+            fontSize="clamp(16px, 4vw, 24px)"
+            color="#3A2A5C"
+            >Este evento no hubiera sido posible sin mis padres.
+          </Title>
+          <Title
+            fontFamily="var(--font-meaculpa)"
+            fontSize="clamp(32px, 8vw, 64px)"
+            color="#3A2A5C"
+            >Ronald y Mildred
+          </Title>
+          <div class="h-10 flex justify-center items-center w-full">
+            <Image
+              src={decor}
+              height={40}
+              alt="Decoracion"
+            />
+          </div>
+        </div>
+      </Frame>
+    </Frame>
+    <RsvpButton phoneNumber={rsvpPhoneNumber} />
+    <MusicPlayer />
+
+    <script>
+      import gsap from "gsap";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      gsap.utils.toArray<HTMLElement>(".reveal").forEach((el) => {
+        gsap.from(el, {
+          opacity: 0,
+          y: 28,
+          duration: 0.9,
+          ease: "power2.out",
+          clearProps: "transform",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 88%",
+            once: true,
+          },
+        });
+      });
+
+      const stamp = document.querySelector<HTMLElement>(".reveal-stamp");
+      if (stamp) {
+        gsap.from(stamp, {
+          opacity: 0,
+          scale: 0.5,
+          rotate: -15,
+          duration: 0.8,
+          ease: "back.out(1.7)",
+          clearProps: "transform",
+          scrollTrigger: {
+            trigger: stamp,
+            start: "top 88%",
+            once: true,
+          },
+        });
+      }
+    </script>
+  </body>
+</html>

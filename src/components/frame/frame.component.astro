@@ -1,0 +1,37 @@
+---
+interface Props {
+  gap?: string;
+  padding?: string;
+  border?: string;
+  background?: string;
+  width?: string;
+  class?: string;
+}
+
+const {
+  gap = "10px",
+  padding = "1rem",
+  border = "4px solid #4B2882",
+  background = "#FAF7F0",
+  width = "100%",
+  class: className,
+} = Astro.props;
+---
+
+<div class:list={['frame', className]}>
+  <slot />
+</div>
+
+<style define:vars={{ gap, padding, border, background, width }}>
+  .frame {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    padding: var(--padding);
+    border: var(--border);
+    background: var(--background);
+    border-radius: 99999px;
+    height: auto;
+    width: var(--width);
+  }
+</style>
