@@ -32,7 +32,8 @@ const {
     background: var(--background);
     background-image: url('../../Images/noise-light.png');
     /* background-size: 300px; */
-    border-radius: 99999px;
+    /* Solo arriba: abajo el marco sigue recto en lugar de cerrarse en curva. */
+    border-radius: 99999px 99999px 0 0;
     height: auto;
     width: var(--width);
   }
