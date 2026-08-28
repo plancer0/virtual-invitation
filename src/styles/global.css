@@ -4,6 +4,20 @@
   --font-baskervville: var(--baskervville);
   --font-baskervville-sc: var(--baskervville-sc);
   --font-meaculpa: var(--meaculpa);
+
+  --color-base: #E8E1EF;
+  --color-ink: #403848;
+  --color-accent: #8D6FAE;
+  --color-detail: #b1a0c7;
+  --color-detail-soft: #D8D3DD;
+}
+
+/* Las decoraciones se salen del marco y de la pantalla a proposito. `clip`
+   recorta ese exceso sin crear contenedor de scroll (a diferencia de `hidden`),
+   asi el reproductor fijo sigue funcionando. */
+html,
+body {
+  overflow-x: clip;
 }
 
 body {
@@ -12,9 +26,28 @@ body {
   justify-content: center;
   align-items: center;
   padding: clamp(24px, 8vw, 80px) 16px;
-  background-image: url("../Images/ilustracion_botanica_color.svg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-color: var(--color-base);
+  background-image: url('../Images/noise-light.png');
+  /* background-size: 300px; */
 }
+
+.corner-decor {
+  position: fixed;
+  width: clamp(180px, 45vw, 460px);
+  height: auto;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.corner-decor--tl {
+  left: 0;
+  top: 0;
+  transform: scaleY(-1);
+}
+
+.corner-decor--tr {
+  right: 0;
+  top: 0;
+  transform: rotate(180deg);
+}
+

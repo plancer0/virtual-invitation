@@ -1,0 +1,27 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div
+  class:list={[
+    "grid grid-cols-2 rounded-[20px] overflow-hidden w-full",
+    className,
+  ]}
+>
+  <div class="flex flex-col items-center justify-center text-center gap-2 p-[clamp(14px,5vw,28px)]">
+    <slot name="a" />
+  </div>
+  <div class="flex flex-col items-center justify-center text-center gap-2 p-[clamp(14px,5vw,28px)]">
+    <slot name="b" />
+  </div>
+  <div class="flex flex-col items-center justify-center text-center gap-2 p-[clamp(14px,5vw,28px)]">
+    <slot name="c" />
+  </div>
+  <div class="flex flex-col items-center justify-center text-center gap-2 p-[clamp(14px,5vw,28px)]">
+    <slot name="d" />
+  </div>
+</div>

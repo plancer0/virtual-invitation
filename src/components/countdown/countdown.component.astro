@@ -1,0 +1,70 @@
+---
+interface Props {
+  date: Date;
+  class?: string;
+}
+
+const { date, class: className } = Astro.props;
+
+const units: { label: string; unit: "days" | "hours" | "minutes" | "seconds" }[] = [
+  { label: "Días", unit: "days" },
+  { label: "Horas", unit: "hours" },
+  { label: "Min", unit: "minutes" },
+  { label: "Seg", unit: "seconds" },
+];
+---
+
+<div
+  class:list={["countdown flex flex-nowrap justify-center gap-[clamp(8px,3vw,20px)]", className]}
+  data-target={date.toISOString()}
+>
+  {
+    units.map(({ label, unit }) => (
+      <div class="flex flex-col items-center gap-1 w-[clamp(56px,18vw,88px)] shrink-0">
+        <span
+          class="countdown-value flex items-center justify-center w-full h-[clamp(56px,18vw,88px)] rounded-[16px] bg-[#D8D3DD] text-[#403848] font-baskervville text-[clamp(22px,7vw,36px)]"
+          data-unit={unit}
+        >
+          00
+        </span>
+        <span class="text-[#8D6FAE] font-baskervville-sc text-[clamp(11px,3vw,15px)] uppercase tracking-wide">
+          {label}
+        </span>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  function pad(value: number) {
+    return String(Math.max(0, value)).padStart(2, "0");
+  }
+
+  document.querySelectorAll<HTMLElement>(".countdown").forEach((el) => {
+    const target = new Date(el.dataset.target ?? "").getTime();
+    const daysEl = el.querySelector<HTMLElement>('[data-unit="days"]');
+    const hoursEl = el.querySelector<HTMLElement>('[data-unit="hours"]');
+    const minutesEl = el.querySelector<HTMLElement>('[data-unit="minutes"]');
+    const secondsEl = el.querySelector<HTMLElement>('[data-unit="seconds"]');
+
+    const tick = () => {
+      let diff = Math.max(0, target - Date.now());
+
+      const days = Math.floor(diff / 86_400_000);
+      diff -= days * 86_400_000;
+      const hours = Math.floor(diff / 3_600_000);
+      diff -= hours * 3_600_000;
+      const minutes = Math.floor(diff / 60_000);
+      diff -= minutes * 60_000;
+      const seconds = Math.floor(diff / 1_000);
+
+      if (daysEl) daysEl.textContent = pad(days);
+      if (hoursEl) hoursEl.textContent = pad(hours);
+      if (minutesEl) minutesEl.textContent = pad(minutes);
+      if (secondsEl) secondsEl.textContent = pad(seconds);
+    };
+
+    tick();
+    setInterval(tick, 1000);
+  });
+</script>

@@ -1,0 +1,309 @@
+---
+import { GOOGLE_CALENDAR_URL } from "../../lib/event";
+
+interface Props {
+  date: Date;
+  class?: string;
+}
+
+const { date, class: className } = Astro.props;
+
+const year = date.getFullYear();
+const month = date.getMonth();
+const highlightedDay = date.getDate();
+
+const weekdayLabels = ["D", "L", "M", "M", "J", "V", "S"];
+
+const firstWeekday = new Date(year, month, 1).getDay();
+const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+const cells: (number | null)[] = [
+  ...Array(firstWeekday).fill(null),
+  ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+];
+while (cells.length % 7 !== 0) cells.push(null);
+
+const monthLabel = date.toLocaleDateString("es-ES", { month: "long", year: "numeric" });
+---
+
+<div class:list={["calendar w-full max-w-[320px] flex flex-col gap-3 items-center", className]}>
+  <span class="font-baskervville-sc text-[#403848] text-[clamp(18px,5vw,24px)] capitalize">
+    {monthLabel}
+  </span>
+  <div class="grid grid-cols-7 gap-[clamp(4px,1.5vw,8px)] w-full">
+    {
+      weekdayLabels.map((label) => (
+        <span class="flex items-center justify-center font-baskervville-sc text-[#8D6FAE] text-[clamp(11px,3vw,14px)] aspect-square">
+          {label}
+        </span>
+      ))
+    }
+    {
+      cells.map((day) =>
+        day === highlightedDay ? (
+          <span class="day-slot relative flex items-center justify-center aspect-square">
+            <button
+              type="button"
+              class="day-button"
+              data-google-url={GOOGLE_CALENDAR_URL}
+              aria-label={`Agregar el ${day} a mi calendario`}
+            >
+              {day}
+            </button>
+            <span class="sparkle sparkle--1" aria-hidden="true" />
+            <span class="sparkle sparkle--2" aria-hidden="true" />
+            <span class="sparkle sparkle--3" aria-hidden="true" />
+            <span class="sparkle sparkle--4" aria-hidden="true" />
+            <span class="sparkle sparkle--5" aria-hidden="true" />
+          </span>
+        ) : (
+          <span class="flex items-center justify-center rounded-full font-baskervville text-[clamp(12px,3.6vw,16px)] aspect-square text-[#403848]">
+            {day ?? ""}
+          </span>
+        ),
+      )
+    }
+  </div>
+  <button type="button" class="calendar-hint" data-google-url={GOOGLE_CALENDAR_URL}>
+    Toca el día para agendarlo
+  </button>
+</div>
+
+<style>
+  .day-slot {
+    /* Los destellos se salen de la celda; que no los recorte la rejilla. */
+    overflow: visible;
+  }
+
+  /* Halo que respira detras del dia. */
+  .day-slot::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 260%;
+    height: 260%;
+    transform: translate(-50%, -50%);
+    border-radius: 9999px;
+    pointer-events: none;
+    background: radial-gradient(
+      circle,
+      rgba(141, 111, 174, 0.32) 0%,
+      rgba(141, 111, 174, 0.14) 45%,
+      transparent 70%
+    );
+    animation: day-halo 2.4s ease-in-out infinite;
+  }
+
+  .day-button {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    border-radius: 9999px;
+    color: #e8e1ef;
+    font-family: var(--font-baskervville);
+    font-size: clamp(12px, 3.6vw, 16px);
+    cursor: pointer;
+    border: none;
+    /* Banda clara que barre el circulo: el brillo se anima moviendo el
+       fondo, no con overflow, para no recortar el area tactil de ::before. */
+    background-image: linear-gradient(
+      115deg,
+      #8d6fae 0%,
+      #8d6fae 40%,
+      #c9b6e4 50%,
+      #8d6fae 60%,
+      #8d6fae 100%
+    );
+    background-size: 300% 100%;
+    animation:
+      day-pulse 2.4s ease-in-out infinite,
+      day-shine 2.4s ease-in-out infinite;
+  }
+
+  @keyframes day-halo {
+    0%,
+    100% {
+      opacity: 0.45;
+      transform: translate(-50%, -50%) scale(0.85);
+    }
+    50% {
+      opacity: 0.95;
+      transform: translate(-50%, -50%) scale(1.12);
+    }
+  }
+
+  @keyframes day-shine {
+    0% {
+      background-position: 150% 0;
+    }
+    55%,
+    100% {
+      background-position: -50% 0;
+    }
+  }
+
+  /* La celda del calendario es pequena (~28px en movil). Este pseudo invisible
+     lleva el area tactil al minimo de 44px sin agrandar el circulo. */
+  .day-button::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    border-radius: 9999px;
+  }
+
+  .day-button:hover,
+  .day-button:focus-visible {
+    animation-play-state: paused;
+    box-shadow: 0 0 0 4px rgba(141, 111, 174, 0.35);
+  }
+
+  /* Anillo que late para llamar la atencion sobre el dia. */
+  @keyframes day-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(141, 111, 174, 0.6);
+    }
+    50% {
+      box-shadow: 0 0 0 12px rgba(141, 111, 174, 0);
+    }
+  }
+
+  .sparkle {
+    position: absolute;
+    z-index: 2;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+    opacity: 0;
+    /* Color del boton, no el de detalle: sobre el fondo lila claro el tono
+       claro no se distinguia. */
+    background: #8d6fae;
+    clip-path: polygon(
+      50% 0%,
+      58% 42%,
+      100% 50%,
+      58% 58%,
+      50% 100%,
+      42% 58%,
+      0% 50%,
+      42% 42%
+    );
+    animation: sparkle-twinkle 2.4s ease-in-out infinite;
+  }
+
+  .sparkle--1 {
+    top: -11px;
+    right: -7px;
+    animation-delay: 0s;
+  }
+
+  .sparkle--2 {
+    bottom: -9px;
+    left: -11px;
+    width: 12px;
+    height: 12px;
+    animation-delay: 0.5s;
+  }
+
+  .sparkle--3 {
+    top: 30%;
+    right: -15px;
+    width: 10px;
+    height: 10px;
+    animation-delay: 1s;
+  }
+
+  .sparkle--4 {
+    top: -8px;
+    left: -10px;
+    width: 9px;
+    height: 9px;
+    animation-delay: 1.5s;
+  }
+
+  .sparkle--5 {
+    bottom: -13px;
+    right: 25%;
+    width: 11px;
+    height: 11px;
+    animation-delay: 0.8s;
+  }
+
+  @keyframes sparkle-twinkle {
+    0%,
+    100% {
+      opacity: 0;
+      transform: scale(0.3) rotate(0deg);
+    }
+    15% {
+      opacity: 1;
+      transform: scale(1.15) rotate(35deg);
+    }
+    35% {
+      opacity: 0.85;
+      transform: scale(0.95) rotate(70deg);
+    }
+    60% {
+      opacity: 0;
+      transform: scale(0.4) rotate(110deg);
+    }
+  }
+
+  .calendar-hint {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: var(--font-baskervville);
+    font-size: clamp(11px, 3vw, 14px);
+    color: #8d6fae;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Quien pide menos movimiento no ve la animacion, pero el boton sigue ahi. */
+  @media (prefers-reduced-motion: reduce) {
+    .day-button {
+      animation: none;
+      background-image: none;
+      background-color: #8d6fae;
+      box-shadow: 0 0 0 3px rgba(141, 111, 174, 0.4);
+    }
+
+    .day-slot::before {
+      animation: none;
+      opacity: 0.7;
+    }
+
+    .sparkle {
+      animation: none;
+      opacity: 0.85;
+      transform: scale(1);
+    }
+  }
+</style>
+
+<script>
+  const isAndroid = () => /android/i.test(navigator.userAgent);
+
+  const addToCalendar = (googleUrl: string) => {
+    if (isAndroid()) {
+      // En Android, Google Calendar es la app por defecto y este enlace la
+      // abre con el evento ya rellenado.
+      window.open(googleUrl, "_blank", "noopener");
+      return;
+    }
+    // iOS (y escritorio): Safari reconoce el .ics y ofrece anadirlo a Calendario.
+    window.location.href = "/evento.ics";
+  };
+
+  document.querySelectorAll<HTMLElement>("[data-google-url]").forEach((el) => {
+    el.addEventListener("click", () => addToCalendar(el.dataset.googleUrl ?? ""));
+  });
+</script>

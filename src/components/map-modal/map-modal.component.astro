@@ -14,9 +14,9 @@ const { googleMapsUrl, appleMapsUrl, wazeUrl, uberUrl } = Astro.props;
   type="button"
   aria-haspopup="dialog"
   aria-expanded="false"
-  class="w-[160px] h-[36px] absolute left-1/2 -translate-x-1/2 top-[clamp(12px,4vw,24px)] bg-[#B8860B] text-[#FAF7F0] text-[16px] rounded-[5px] shadow-lg font-baskervville tracking-wide hover:opacity-90 transition-opacity"
+  class="inline-flex items-center justify-center whitespace-nowrap bg-[#8D6FAE] text-[#E8E1EF] px-[clamp(16px,5vw,24px)] py-[clamp(8px,2.4vw,12px)] rounded-full shadow-lg font-baskervville text-[clamp(13px,3.6vw,16px)] tracking-wide hover:opacity-90 transition-opacity"
 >
-  Ver en mapas
+  Cómo llegar
 </button>
 
 <div
@@ -26,14 +26,14 @@ const { googleMapsUrl, appleMapsUrl, wazeUrl, uberUrl } = Astro.props;
 >
   <div
     id="map-modal-panel"
-    class="w-full max-w-[360px] rounded-[24px] border-2 border-[#4B2882] bg-[#FAF7F0] p-[clamp(20px,6vw,32px)] flex flex-col gap-4 items-center"
+    class="w-full max-w-[360px] rounded-[24px] border border-[#b1a0c7] bg-[#E8E1EF] p-[clamp(20px,6vw,32px)] flex flex-col gap-4 items-center"
     role="dialog"
     aria-modal="true"
     aria-labelledby="map-modal-title"
   >
     <h2
       id="map-modal-title"
-      class="font-baskervville text-[#3A2A5C] text-[clamp(20px,5vw,28px)] text-center"
+      class="font-baskervville text-[#403848] text-[clamp(20px,5vw,28px)] text-center"
     >
       ¿Cómo quieres llegar?
     </h2>
@@ -50,7 +50,7 @@ const { googleMapsUrl, appleMapsUrl, wazeUrl, uberUrl } = Astro.props;
     <button
       id="map-modal-close"
       type="button"
-      class="text-[#3A2A5C] underline text-[clamp(14px,4vw,16px)] font-baskervville mt-1"
+      class="text-[#403848] underline text-[clamp(14px,4vw,16px)] font-baskervville mt-1"
     >
       Cerrar
     </button>
@@ -65,8 +65,8 @@ const { googleMapsUrl, appleMapsUrl, wazeUrl, uberUrl } = Astro.props;
     width: 100%;
     padding: 14px;
     border-radius: 9999px;
-    border: 1px solid #4b2882;
-    color: #3a2a5c;
+    border: 1px solid #b1a0c7;
+    color: #403848;
     font-family: var(--font-baskervville);
     font-size: clamp(14px, 4vw, 18px);
     text-decoration: none;
@@ -77,8 +77,8 @@ const { googleMapsUrl, appleMapsUrl, wazeUrl, uberUrl } = Astro.props;
 
   .map-option:hover,
   .map-option:focus-visible {
-    background-color: #3a2a5c;
-    color: #faf7f0;
+    background-color: #8d6fae;
+    color: #e8e1ef;
   }
 </style>
 

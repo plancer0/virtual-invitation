@@ -11,8 +11,8 @@ interface Props {
 const {
   gap = "10px",
   padding = "1rem",
-  border = "4px solid #4B2882",
-  background = "#FAF7F0",
+  border = "1px solid #b1a0c7",
+  background = "#E8E1EF",
   width = "100%",
   class: className,
 } = Astro.props;
@@ -30,6 +30,8 @@ const {
     padding: var(--padding);
     border: var(--border);
     background: var(--background);
+    background-image: url('../../Images/noise-light.png');
+    /* background-size: 300px; */
     border-radius: 99999px;
     height: auto;
     width: var(--width);

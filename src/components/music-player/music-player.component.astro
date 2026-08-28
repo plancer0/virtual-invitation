@@ -53,22 +53,26 @@
     audio.addEventListener("play", () => setPlayingUI(true));
     audio.addEventListener("pause", () => setPlayingUI(false));
 
-    // Try to autoplay as soon as the page loads.
-    audio.play().catch(() => {});
+    const isLocalhost = ["localhost", "127.0.0.1"].includes(location.hostname);
 
-    // Browsers block unmuted autoplay without a user gesture. As a fallback,
-    // start playback on the first interaction anywhere on the page (except
-    // the toggle button itself, which already handles play/pause on click).
-    const startOnFirstInteraction = (event: Event) => {
-      if (event.target instanceof Node && button.contains(event.target)) return;
-      if (audio.paused) audio.play().catch(() => {});
-      document.removeEventListener("pointerdown", startOnFirstInteraction);
-      document.removeEventListener("touchend", startOnFirstInteraction);
-      document.removeEventListener("keydown", startOnFirstInteraction);
-    };
-    document.addEventListener("pointerdown", startOnFirstInteraction);
-    document.addEventListener("touchend", startOnFirstInteraction);
-    document.addEventListener("keydown", startOnFirstInteraction);
+    if (!isLocalhost) {
+      // Try to autoplay as soon as the page loads.
+      audio.play().catch(() => {});
+
+      // Browsers block unmuted autoplay without a user gesture. As a fallback,
+      // start playback on the first interaction anywhere on the page (except
+      // the toggle button itself, which already handles play/pause on click).
+      const startOnFirstInteraction = (event: Event) => {
+        if (event.target instanceof Node && button.contains(event.target)) return;
+        if (audio.paused) audio.play().catch(() => {});
+        document.removeEventListener("pointerdown", startOnFirstInteraction);
+        document.removeEventListener("touchend", startOnFirstInteraction);
+        document.removeEventListener("keydown", startOnFirstInteraction);
+      };
+      document.addEventListener("pointerdown", startOnFirstInteraction);
+      document.addEventListener("touchend", startOnFirstInteraction);
+      document.addEventListener("keydown", startOnFirstInteraction);
+    }
 
     button.addEventListener("click", () => {
       if (audio.paused) {

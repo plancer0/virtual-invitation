@@ -1,0 +1,28 @@
+---
+import { Image } from "astro:assets";
+import flor from "../../Images/flor_vectorial_morada.svg";
+
+interface Props {
+  class?: string;
+  /** Refleja la rama para el lado opuesto. */
+  flip?: boolean;
+  [key: string]: unknown;
+}
+
+const { class: className, flip = false, ...rest } = Astro.props;
+---
+
+<!-- Se usa como imagen, no inline: el SVG trae 1015 trazos y meterlos dos
+     veces en el DOM penalizaria el scroll en movil. Los colores van horneados
+     en flor_vectorial_morada.svg, copia recoloreada de flor_vectorial_corregido
+     .svg: tinta #8D6FAE y relleno #D8D3DD. Con el lila #b1a0c7 original el
+     contraste sobre el fondo era 1.89 y no se distinguia nada. -->
+<Image
+  src={flor}
+  width={941}
+  height={1672}
+  alt=""
+  aria-hidden="true"
+  class:list={[className, flip && "-scale-x-100"]}
+  {...rest}
+/>

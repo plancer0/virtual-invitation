@@ -1,0 +1,58 @@
+---
+interface Props {
+  class?: string;
+  color?: string;
+  accent?: string;
+  [key: string]: unknown;
+}
+
+const { class: className, color = "#b1a0c7", accent = "#D8D3DD", ...rest } = Astro.props;
+---
+
+<!-- Galon sobre el cubo: dos brazos inclinados que nacen en los costados y
+     suben hasta un vertice central. Los extremos caen fuera del viewBox para
+     que el recorte del propio svg los deje justo en el borde del marco. -->
+<svg
+  class:list={[className]}
+  viewBox="0 0 800 110"
+  fill="none"
+  aria-hidden="true"
+  xmlns="http://www.w3.org/2000/svg"
+  {...rest}
+>
+  <defs>
+    <filter id="cube-crayon-a" x="-4%" y="-25%" width="108%" height="150%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="7" result="n" />
+      <feDisplacementMap
+        in="SourceGraphic"
+        in2="n"
+        scale="2.4"
+        xChannelSelector="R"
+        yChannelSelector="G"
+      />
+    </filter>
+    <filter id="cube-crayon-b" x="-4%" y="-25%" width="108%" height="150%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" seed="23" result="n" />
+      <feDisplacementMap
+        in="SourceGraphic"
+        in2="n"
+        scale="3.2"
+        xChannelSelector="R"
+        yChannelSelector="G"
+      />
+    </filter>
+  </defs>
+
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <g filter="url(#cube-crayon-b)" stroke={accent} stroke-width="1.4" opacity="0.7">
+      <path d="M-12,108 L400,32 L812,108" />
+    </g>
+    <g filter="url(#cube-crayon-a)" stroke={color} stroke-width="2.2">
+      <path d="M-12,100 L400,16 L812,100" />
+    </g>
+    <!-- Rombo pequeno en el vertice, para enlazar con el de "Mis padres". -->
+    <g filter="url(#cube-crayon-a)" stroke={color} stroke-width="1.6">
+      <polygon points="400,6 410,16 400,26 390,16" />
+    </g>
+  </g>
+</svg>

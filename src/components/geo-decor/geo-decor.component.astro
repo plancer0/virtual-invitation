@@ -1,0 +1,78 @@
+---
+interface Props {
+  class?: string;
+  color?: string;
+  accent?: string;
+  [key: string]: unknown;
+}
+
+const {
+  class: className,
+  color = "#b1a0c7",
+  accent = "#D8D3DD",
+  ...rest
+} = Astro.props;
+---
+
+<!-- El viewBox es cuadrado y la seccion tambien, asi que normalmente no hay
+     deformacion; preserveAspectRatio="none" solo actua si el texto obliga a la
+     caja a crecer de alto, y entonces el rombo la sigue en vez de quedarse corto.
+
+     El viewBox (800x920) tiene la misma proporcion que la caja, asi que las
+     escalas X e Y coinciden y el rombo es un cuadrado girado exacto. Sus
+     diagonales miden lo mismo (450), pero como la caja es mas alta que ancha
+     solo los vertices laterales caen fuera del viewBox: el viewport del propio
+     svg los recorta, y las puntas quedan fuera del marco sin verse. -->
+<svg
+  class:list={[className]}
+  viewBox="0 0 800 920"
+  preserveAspectRatio="none"
+  fill="none"
+  aria-hidden="true"
+  xmlns="http://www.w3.org/2000/svg"
+  {...rest}
+>
+  <defs>
+    <!-- El desplazamiento por ruido rompe el trazo recto y le da el borde
+         irregular de un dibujo a mano/crayon. -->
+    <filter id="geo-crayon-a" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="5" result="n" />
+      <feDisplacementMap
+        in="SourceGraphic"
+        in2="n"
+        scale="2.6"
+        xChannelSelector="R"
+        yChannelSelector="G"
+      />
+    </filter>
+    <filter id="geo-crayon-b" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" seed="19" result="n" />
+      <feDisplacementMap
+        in="SourceGraphic"
+        in2="n"
+        scale="3.4"
+        xChannelSelector="R"
+        yChannelSelector="G"
+      />
+    </filter>
+  </defs>
+
+  <g fill="none" stroke-linejoin="round" stroke-linecap="round">
+    <g filter="url(#geo-crayon-b)" stroke={accent} stroke-width="1.4" opacity="0.65">
+      <polygon points="400,30 830,460 400,890 -30,460" />
+    </g>
+    <g filter="url(#geo-crayon-a)" stroke={color} stroke-width="2.4">
+      <polygon points="400,10 850,460 400,910 -50,460" />
+    </g>
+    <!-- X tendida sobre cada punta del rombo, la de abajo en espejo respecto
+         al centro (y=460). Los extremos se salen del viewBox para que el
+         recorte los deje justo en el borde del marco, sin que el temblor del
+         filtro abra un hueco. -->
+    <g filter="url(#geo-crayon-b)" stroke={color} stroke-width="1.8">
+      <path d="M-12,16 L812,304" />
+      <path d="M-12,304 L812,16" />
+      <path d="M-12,904 L812,616" />
+      <path d="M-12,616 L812,904" />
+    </g>
+  </g>
+</svg>
