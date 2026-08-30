@@ -36,10 +36,14 @@ const wazeUrl = "https://waze.com/ul/h9fxd5nyz3";
 const uberMapsUrl = `https://m.uber.com/ul/?action=setPickup&dropoff[latitude]=${venueLat}&dropoff[longitude]=${venueLng}&dropoff[formatted_address]=${venueQuery}&dropoff[nickname]=${encodeURIComponent(venueName)}`;
 
 const dressCodeType = "Gala";
-const dressCodeColor = "Morado";
-const dressCodeColorHex = "#8D6FAE";
+// El plateado va en un gris frio oscurecido: el plata real (#C0C0C0) sobre el
+// fondo lila queda ilegible.
+const dressCodeColors = [
+  { name: "Morado", hex: "#8D6FAE" },
+  { name: "Plateado", hex: "#7C7C8A" },
+];
 
-const rsvpDeadline = new Date(date.getTime() - 14 * 24 * 60 * 60 * 1000);
+const rsvpDeadline = new Date("2026-10-01T00:00:00");
 const rsvpDeadlineLabel = rsvpDeadline.toLocaleDateString("es-ES", {
   day: "numeric",
   month: "long",
@@ -70,10 +74,34 @@ const rsvpPhoneNumber = "50242432127";
         border="none"
         class="justify-center items-center"
       >
-        <div class="reveal flex w-full flex-col items-center gap-3 px-[clamp(16px,6vw,58px)]">
+        <div
+          class="reveal relative flex w-full flex-col items-center gap-3 px-[clamp(16px,6vw,58px)]"
+          style="--out: calc(-1 * (clamp(20px, 8vw, 85px) + 21px)); --out-top: calc(-1 * (clamp(24px, 8vw, 80px) + clamp(20px, 8vw, 85px) + 5px) - clamp(50px, 14vw, 105px));"
+        >
+          <!-- Rosas en las esquinas superiores. El desplazamiento vertical suma
+               el padding del body, el del Frame y su borde, mas un extra para
+               que la esquina quede cortada por el filo de la pantalla. -->
+          <div
+            class="pointer-events-none absolute w-[clamp(140px,36vw,280px)] origin-top-left rotate-[9deg]"
+            style="left: calc(var(--out) - 12%); top: var(--out-top);"
+          >
+            <SideDecor kind="rosas" class="block w-full h-auto" />
+          </div>
+          <div
+            class="pointer-events-none absolute w-[clamp(140px,36vw,280px)] origin-top-right rotate-[-9deg]"
+            style="right: calc(var(--out) - 12%); top: var(--out-top);"
+          >
+            <SideDecor kind="rosas" flip class="block w-full h-auto" />
+          </div>
+          <!-- Mariposas subiendo por el lado derecho del titulo. -->
+          <SideDecor
+            kind="mariposas"
+            class="pointer-events-none absolute top-[24%] w-[clamp(66px,17vw,130px)] origin-top-right rotate-[10deg]"
+            style="right: calc(var(--out) - 6%);"
+          />
           <Title
             fontSize="clamp(28px, 7vw, 40px)"
-            class="flex items-stretch justify-center gap-[clamp(8px,2.5vw,16px)] pt-[clamp(62px,17.5vw,90px)]"
+            class="relative flex items-stretch justify-center gap-[clamp(8px,2.5vw,16px)] pt-[clamp(62px,17.5vw,90px)]"
           >
             <span
               class="flex items-start leading-none font-meaculpa text-[clamp(20px,5.2vw,30px)] mt-[clamp(18px,5.5vw,35px)]"
@@ -107,6 +135,13 @@ const rsvpPhoneNumber = "50242432127";
           class="reveal relative flex w-full flex-col items-center gap-6 px-[clamp(16px,6vw,58px)]"
           style="--out: calc(-1 * (clamp(20px, 8vw, 85px) + 21px));"
         >
+          <!-- Mariposa asomando por la izquierda, sobre el nombre. -->
+          <SideDecor
+            kind="mariposas"
+            flip
+            class="pointer-events-none absolute top-[2%] w-[clamp(54px,14vw,104px)] origin-top-left rotate-[-12deg]"
+            style="left: calc(var(--out) - 4%);"
+          />
           <!-- Ramas laterales, detras de las fotos. El desplazamiento es el
                padding del Frame mas el del body: en movil eso deja el borde de
                la rama justo en el filo de la pantalla. Se evita 50vw a
@@ -145,8 +180,14 @@ const rsvpPhoneNumber = "50242432127";
 
         <div
           class="reveal relative grid w-full"
-          style="--bleed: clamp(20px, 8vw, 85px);"
+          style="--bleed: clamp(20px, 8vw, 85px); --out: calc(-1 * (clamp(20px, 8vw, 85px) + 21px));"
         >
+          <!-- Mariposas en la esquina superior derecha del rombo. -->
+          <SideDecor
+            kind="mariposas"
+            class="pointer-events-none absolute top-[4%] z-[1] w-[clamp(58px,15vw,112px)] origin-top-right rotate-[14deg]"
+            style="right: calc(var(--out) - 2%);"
+          />
           <!-- El desplazamiento negativo saca el rombo del padding del Frame
                para que sus vertices laterales toquen el borde del marco. -->
           <GeoDecor
@@ -185,15 +226,41 @@ const rsvpPhoneNumber = "50242432127";
           </div>
         </div>
 
-        <div class="reveal flex w-full flex-col items-center gap-8 px-[clamp(16px,6vw,58px)]">
-          <CalendarComponent date={date} />
-          <CountdownComponent date={date} />
+        <div
+          class="reveal relative flex w-full flex-col items-center gap-8 px-[clamp(16px,6vw,58px)]"
+          style="--out: calc(-1 * (clamp(20px, 8vw, 85px) + 21px));"
+        >
+          <!-- Globos entrando por la derecha, cortados por el filo de la
+               pantalla: mismo desplazamiento que el resto de decoraciones. -->
+          <div
+            class="pointer-events-none absolute top-[34%] -translate-y-1/2 w-[clamp(96px,25vw,190px)] origin-right rotate-[10deg]"
+            style="right: calc(var(--out) - 13%);"
+          >
+            <SideDecor kind="globos" class="block w-full h-auto" />
+          </div>
+
+          <div
+            class="pointer-events-none absolute top-[20%] -translate-y-1/2 w-[clamp(96px,25vw,190px)] origin-right rotate-[10deg]"
+            style="left: calc(var(--out) - 13%);"
+          >
+            <SideDecor kind="globos" class="block w-full h-auto" />
+          </div>
+          <!-- Rama por la izquierda del calendario. -->
+          <CalendarComponent date={date} class="relative" />
+          <CountdownComponent date={date} class="relative" />
         </div>
 
         <div
           class="reveal relative w-full pt-[clamp(44px,13vw,108px)] mb-[clamp(24px,6vw,48px)]"
           style="--bleed: clamp(20px, 8vw, 85px); --out: calc(-1 * (clamp(20px, 8vw, 85px) + 21px));"
         >
+          <!-- Mariposa junto al galon, en el hueco superior del bloque. -->
+          <SideDecor
+            kind="mariposas"
+            flip
+            class="pointer-events-none absolute top-0 w-[clamp(46px,12vw,88px)] origin-top-left rotate-[-16deg]"
+            style="left: calc(var(--out) - 2%);"
+          />
           <!-- Mismas ramas que en las fotos, brotando de las esquinas
                inferiores. Aqui van mas pequenas y mucho mas hundidas hacia
                fuera que en las fotos: las celdas del cubo dejan solo ~58px de
@@ -206,7 +273,7 @@ const rsvpPhoneNumber = "50242432127";
           </div>
           <div
             class="pointer-events-none absolute bottom-[4%] w-[clamp(100px,26vw,200px)] origin-bottom-right rotate-[-26deg]"
-            style="right: calc(var(--out) - 45%);"
+            style="right: calc(var(--out) - 30%);"
           >
             <SideDecor flip class="block w-full h-auto" />
           </div>
@@ -257,9 +324,16 @@ const rsvpPhoneNumber = "50242432127";
               <div class="flex flex-col items-center gap-1 flex-1 min-w-[105px]">
                 <Title fontSize="clamp(18px, 4.6vw, 24px)">{dressCodeType}</Title>
                 <p class="font-baskervville text-[#403848] text-[clamp(13px,3.6vw,16px)]">
-                  Color reservado: <span class="font-semibold" style={`color:${dressCodeColorHex}`}
-                    >{dressCodeColor}</span
-                  >
+                  Colores reservados: {
+                    dressCodeColors.map((color, i) => (
+                      <>
+                        {i > 0 && " y "}
+                        <span class="font-semibold" style={`color:${color.hex}`}>
+                          {color.name}
+                        </span>
+                      </>
+                    ))
+                  }
                 </p>
               </div>
             </div>
@@ -276,7 +350,8 @@ const rsvpPhoneNumber = "50242432127";
           <Fragment slot="d">
             <Title fontSize="clamp(20px, 5vw, 28px)">Sugerencia de regalo</Title>
             <p class="font-baskervville text-[#403848] text-[clamp(13px,3.6vw,16px)]">
-              Si deseas obsequiarnos algo, un sobre será muy bien recibido.
+              El mejor regalo es compartir este día con nosotros. Si gusta otorgar un
+              obsequio, se agradecerá que sea en efectivo.
             </p>
             <div class="flex gap-4 mt-1">
               <svg viewBox="0 0 24 24" class="w-[clamp(24px,7vw,32px)] h-[clamp(24px,7vw,32px)]" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -295,8 +370,34 @@ const rsvpPhoneNumber = "50242432127";
           </InfoCube>
         </div>
 
-        <div class="reveal flex w-full flex-col items-center px-[clamp(16px,6vw,58px)]">
+        <div
+          class="reveal relative flex w-full flex-col items-center px-[clamp(16px,6vw,58px)]"
+          style="--out: calc(-1 * (clamp(20px, 8vw, 85px) + 21px));"
+        >
+          <!-- Mariposas alejandose por arriba, cerrando el recorrido. -->
+          <SideDecor
+            kind="mariposas"
+            class="pointer-events-none absolute -top-[clamp(58px,16vw,120px)] w-[clamp(50px,13vw,96px)] origin-top-right rotate-[18deg]"
+            style="right: var(--out);"
+          />
+          <!-- Rosas cerrando la invitacion, una a cada lado del titulo. La
+               rotacion va en el contenedor y el volteo en la imagen: si
+               compartieran elemento, el origen del giro desplazaria el volteo
+               y las dos dejarian de estar a la misma altura. -->
+          <div
+            class="pointer-events-none absolute bottom-0 w-[clamp(78px,20vw,150px)] origin-bottom-left rotate-[12deg]"
+            style="left: calc(var(--out) - 10%);"
+          >
+            <SideDecor kind="rosas" class="block w-full h-auto" />
+          </div>
+          <div
+            class="pointer-events-none absolute bottom-0 w-[clamp(78px,20vw,150px)] origin-bottom-right rotate-[-12deg]"
+            style="right: calc(var(--out) - 10%);"
+          >
+            <SideDecor kind="rosas" flip class="block w-full h-auto" />
+          </div>
           <Title
+            class="relative"
             fontFamily="var(--font-meaculpa)"
             fontSize="clamp(40px, 11vw, 88px)"
             color="#8D6FAE"

@@ -1,38 +1,45 @@
 ---
+import { Image } from "astro:assets";
+import foto1 from "../../Images/1.jpeg";
+import foto2 from "../../Images/2.jpeg";
+import foto3 from "../../Images/3.jpeg";
+import foto4 from "../../Images/4.jpeg";
+
 interface Props {
   class?: string;
 }
 
 const { class: className } = Astro.props;
 
-const roles = ["a", "b", "c", "d"];
+// El orden de las tarjetas al desplegarse es: a arriba-izq, b arriba-der,
+// c abajo-izq, d abajo-der.
+// `pos` mueve el encuadre dentro del marco. La 4 es horizontal, asi que al
+// recortarla a vertical se pierde ancho y hay que elegir que lado conservar.
+// `zoom` acerca la imagen mas alla del encuadre de object-cover; el marco la
+// recorta porque lleva overflow oculto.
+const fotos = [
+  { role: "a", src: foto1, pos: "object-center", zoom: "" },
+  { role: "b", src: foto2, pos: "object-center", zoom: "" },
+  // La 3 es de cuerpo entero y muy alargada: centrada le cortaba la cabeza.
+  { role: "c", src: foto3, pos: "object-top", zoom: "" },
+  { role: "d", src: foto4, pos: "object-[93%_50%]", zoom: "scale-125 origin-right" },
+];
 ---
 
-<div
-  class:list={["polaroid-stage relative w-full flex justify-center items-center", className]}
->
+<div class:list={["polaroid-stage relative w-full flex justify-center items-center", className]}>
   {
-    roles.map((role) => (
+    fotos.map(({ role, src, pos, zoom }) => (
       <div class="polaroid-anchor">
         <div class="polaroid-card" data-role={role}>
           <div class="polaroid-photo">
-            <svg
-              viewBox="0 0 48 48"
-              class="w-[30%] h-[30%]"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect x="4" y="8" width="40" height="32" rx="3" stroke="#b1a0c7" stroke-width="2" />
-              <circle cx="16" cy="19" r="4" stroke="#b1a0c7" stroke-width="2" />
-              <path
-                d="M4 33L16 22L26 30L34 24L44 33"
-                stroke="#b1a0c7"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <span>Foto</span>
+            {/* object-cover recorta al centro: las cuatro fotos tienen
+                proporciones distintas y asi todas llenan el marco. */}
+            <Image
+              src={src}
+              width={520}
+              alt=""
+              class:list={["w-full h-full object-cover", pos, zoom]}
+            />
           </div>
         </div>
       </div>
@@ -42,8 +49,9 @@ const roles = ["a", "b", "c", "d"];
 
 <style>
   .polaroid-stage {
-    /* Alto para dos filas de tarjetas una vez desplegadas. */
-    height: clamp(400px, 110vw, 580px);
+    /* Alto para dos filas de tarjetas una vez desplegadas. Debe seguir al
+       ancho de tarjeta: el despliegue ocupa 2.04 veces su altura. */
+    height: clamp(430px, 132vw, 730px);
   }
 
   .polaroid-anchor {
@@ -72,22 +80,30 @@ const roles = ["a", "b", "c", "d"];
        dos anchos de tarjeta, asi que por debajo de 375px deben encoger para
        no salirse del marco. */
     width: clamp(104px, 37vw, 210px);
-    aspect-ratio: 4 / 5;
+    /* El alto lo marca la foto, no la tarjeta: si se fija aqui, la proporcion
+       del hueco de la foto cambia con cada breakpoint (los paddings usan
+       clamps distintos) y el recorte sale distinto en cada dispositivo. */
     background: #ffffff;
     padding: clamp(10px, 2.4vw, 14px) clamp(10px, 2.4vw, 14px) clamp(34px, 8vw, 44px);
-    box-shadow: 0 12px 28px rgba(64, 56, 72, 0.22);
+    /* Difuminado corto a proposito: el coste de pintar una sombra crece con el
+       radio, y a 28px era de lo mas caro de la pagina en movil. */
+    box-shadow: 0 4px 10px rgba(64, 56, 72, 0.26);
     border-radius: 4px;
+    /* Promueve cada tarjeta a su propia capa: la sombra difuminada se rasteriza
+       una sola vez y el scroll solo compone, en vez de repintar 4 sombras en
+       cada frame. Es lo que hacia que se trabara en movil. */
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   .polaroid-photo {
     width: 100%;
-    height: 100%;
+    /* Proporcion fija: identica en todos los dispositivos. Mas alta que antes
+       para que las fotos verticales pierdan menos al recortarse. */
+    aspect-ratio: 2 / 3;
     background: #d8d3dd;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
+    /* overflow oculto para que object-cover recorte dentro del marco. */
+    overflow: hidden;
   }
 
   .polaroid-photo span {
@@ -96,13 +112,108 @@ const roles = ["a", "b", "c", "d"];
     font-size: clamp(11px, 3vw, 14px);
     letter-spacing: 0.04em;
   }
+
+  /* Despliegue ligado al scroll, pero en CSS: lo ejecuta el compositor, fuera
+     del hilo principal, asi que no compite con el scroll del navegador. Es la
+     diferencia con hacerlo por JavaScript, que era lo que trababa en movil.
+     Donde no haya soporte, el script de abajo hace el despliegue de una vez. */
+  @supports (animation-timeline: view()) {
+    .polaroid-card {
+      /* En propiedades separadas: el atajo `animation: linear both` es
+         invalido y el navegador descarta la declaracion entera, dejando
+         fill en none y provocando un salto fuera del rango. */
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 15% cover 40%;
+    }
+
+    .polaroid-card[data-role="a"] {
+      animation-name: desplegar-a;
+    }
+    .polaroid-card[data-role="b"] {
+      animation-name: desplegar-b;
+    }
+    .polaroid-card[data-role="c"] {
+      animation-name: desplegar-c;
+    }
+    .polaroid-card[data-role="d"] {
+      animation-name: desplegar-d;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .polaroid-card {
+        animation: none;
+      }
+      .polaroid-card[data-role="a"] {
+        transform: translate(-50%, -52%) rotate(-8deg);
+      }
+      .polaroid-card[data-role="b"] {
+        transform: translate(50%, -52%) rotate(6deg);
+      }
+      .polaroid-card[data-role="c"] {
+        transform: translate(-50%, 52%) rotate(-5deg);
+      }
+      .polaroid-card[data-role="d"] {
+        transform: translate(50%, 52%) rotate(8deg);
+      }
+    }
+  }
+
+  @keyframes desplegar-a {
+    from {
+      transform: translate(0, -1%) rotate(-4deg);
+    }
+    to {
+      transform: translate(-50%, -52%) rotate(-8deg);
+    }
+  }
+
+  @keyframes desplegar-b {
+    from {
+      transform: translate(0, 1%) rotate(3deg);
+    }
+    to {
+      transform: translate(50%, -52%) rotate(6deg);
+    }
+  }
+
+  @keyframes desplegar-c {
+    from {
+      transform: translate(0, 3%) rotate(-2deg);
+    }
+    to {
+      transform: translate(-50%, 52%) rotate(-5deg);
+    }
+  }
+
+  @keyframes desplegar-d {
+    from {
+      transform: translate(0, 5%) rotate(4deg);
+    }
+    to {
+      transform: translate(50%, 52%) rotate(8deg);
+    }
+  }
 </style>
 
 <script>
   import gsap from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+  // Si el navegador soporta animaciones ligadas al scroll, el despliegue lo
+  // resuelve el CSS en el compositor y aqui no hay nada que hacer.
+  const scrollDrivenCss = CSS.supports("animation-timeline", "view()");
+
   gsap.registerPlugin(ScrollTrigger);
+
+  // En movil, mostrar u ocultar la barra del navegador cambia el alto del
+  // viewport y dispara un refresh de ScrollTrigger a mitad del scroll: es la
+  // causa tipica del tiron. Con esto se ignora ese cambio de alto.
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  const sinMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // x/y en porcentaje son relativos al propio tamano de la tarjeta, asi que
   // el despliegue escala solo con el clamp del ancho.
@@ -113,21 +224,42 @@ const roles = ["a", "b", "c", "d"];
     d: { from: { rotate: 4, y: "5%" }, to: { x: "50%", y: "52%", rotate: 8 } },
   };
 
+  if (!scrollDrivenCss)
   document.querySelectorAll<HTMLElement>(".polaroid-stage").forEach((stage) => {
-    const timeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: stage,
-        start: "top 80%",
-        end: "top 20%",
-        scrub: 0.6,
-      },
-    });
+    const cards = Object.entries(layout)
+      .map(([role, config]) => ({
+        el: stage.querySelector<HTMLElement>(`[data-role="${role}"]`),
+        config,
+      }))
+      .filter((c): c is { el: HTMLElement; config: (typeof layout)["a"] } => c.el !== null);
 
-    Object.entries(layout).forEach(([role, config]) => {
-      const card = stage.querySelector<HTMLElement>(`[data-role="${role}"]`);
-      if (!card) return;
-      gsap.set(card, config.from);
-      timeline.to(card, { ...config.to, ease: "none" }, 0);
+    // Sin animacion: se dejan ya desplegadas.
+    if (sinMovimiento) {
+      cards.forEach(({ el, config }) => gsap.set(el, config.to));
+      return;
+    }
+
+    cards.forEach(({ el, config }) => gsap.set(el, { ...config.from, force3D: true }));
+
+    // Se dispara una sola vez al entrar en pantalla y corre en su propio
+    // tiempo. Antes iba atada al scroll con `scrub`, lo que obligaba a
+    // recalcular las cuatro tarjetas en cada frame mientras el usuario
+    // deslizaba: eso competia con el scroll del navegador y lo trababa.
+    ScrollTrigger.create({
+      trigger: stage,
+      start: "top 75%",
+      once: true,
+      onEnter: () => {
+        const tl = gsap.timeline({
+          onComplete: () => {
+            // Terminada la animacion se libera la capa extra de cada tarjeta.
+            cards.forEach(({ el }) => (el.style.willChange = "auto"));
+          },
+        });
+        cards.forEach(({ el, config }, i) => {
+          tl.to(el, { ...config.to, duration: 0.9, ease: "power3.out", force3D: true }, i * 0.08);
+        });
+      },
     });
   });
 </script>

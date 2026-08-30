@@ -117,9 +117,9 @@ const monthLabel = date.toLocaleDateString("es-ES", { month: "long", year: "nume
       #8d6fae 100%
     );
     background-size: 300% 100%;
-    animation:
-      day-pulse 2.4s ease-in-out infinite,
-      day-shine 2.4s ease-in-out infinite;
+    /* El barrido de brillo era una animacion infinita de background-position,
+       que obliga a repintar en cada frame. Se deja como degradado fijo. */
+    background-position: 50% 0;
   }
 
   @keyframes day-halo {
@@ -131,16 +131,6 @@ const monthLabel = date.toLocaleDateString("es-ES", { month: "long", year: "nume
     50% {
       opacity: 0.95;
       transform: translate(-50%, -50%) scale(1.12);
-    }
-  }
-
-  @keyframes day-shine {
-    0% {
-      background-position: 150% 0;
-    }
-    55%,
-    100% {
-      background-position: -50% 0;
     }
   }
 
@@ -157,20 +147,33 @@ const monthLabel = date.toLocaleDateString("es-ES", { month: "long", year: "nume
     border-radius: 9999px;
   }
 
-  .day-button:hover,
-  .day-button:focus-visible {
-    animation-play-state: paused;
-    box-shadow: 0 0 0 4px rgba(141, 111, 174, 0.35);
+  /* Anillo que late. Antes se animaba box-shadow, que repinta en cada frame;
+     ahora es un pseudo que solo escala y varia opacidad, y eso lo resuelve el
+     compositor sin repintar. */
+  .day-button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    border: 2px solid rgba(141, 111, 174, 0.6);
+    animation: day-pulse 2.4s ease-in-out infinite;
+    pointer-events: none;
   }
 
-  /* Anillo que late para llamar la atencion sobre el dia. */
+  .day-button:hover::after,
+  .day-button:focus-visible::after {
+    animation-play-state: paused;
+  }
+
   @keyframes day-pulse {
     0%,
     100% {
-      box-shadow: 0 0 0 0 rgba(141, 111, 174, 0.6);
+      opacity: 0.7;
+      transform: scale(1);
     }
     50% {
-      box-shadow: 0 0 0 12px rgba(141, 111, 174, 0);
+      opacity: 0;
+      transform: scale(1.9);
     }
   }
 
@@ -270,10 +273,14 @@ const monthLabel = date.toLocaleDateString("es-ES", { month: "long", year: "nume
   /* Quien pide menos movimiento no ve la animacion, pero el boton sigue ahi. */
   @media (prefers-reduced-motion: reduce) {
     .day-button {
-      animation: none;
       background-image: none;
       background-color: #8d6fae;
-      box-shadow: 0 0 0 3px rgba(141, 111, 174, 0.4);
+    }
+
+    .day-button::after {
+      animation: none;
+      opacity: 0.8;
+      transform: scale(1.25);
     }
 
     .day-slot::before {
