@@ -52,9 +52,13 @@ body {
   animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* Sin forzar tamano ni recorte: el navegador ya escala y funde las dos cajas.
-   Imponer height/object-fit deformaba las imagenes al tener proporciones
-   distintas. */
+/* Rellenar y recortar en vez de encajar: es lo que hace que el sobre parezca
+   abrirse hacia la pagina, en lugar de encogerse dentro de una caja. */
+::view-transition-old(carta),
+::view-transition-new(carta) {
+  height: 100%;
+  object-fit: cover;
+}
 
 @keyframes portada-sale {
   to {

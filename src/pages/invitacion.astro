@@ -69,6 +69,20 @@ const rsvpPhoneNumber = "50242432127";
     <title>Invitacion de Rachell</title>
   </head>
   <body>
+    <!-- Ancla invisible de la transicion desde la portada: ocupa el sitio y el
+         ancho del marco, pero solo el alto de la pantalla. El sobre se
+         transforma en ella y el efecto se ve igual que abriendose hacia toda
+         la pagina, porque mas alla del viewport no hay nada que ver.
+         No se nombra el marco real: mide 2558px de alto y obligaba al
+         navegador a rasterizar 30MB de contenido pintado en cada frame. Esta
+         caja no pinta nada, asi que su textura es practicamente gratis. -->
+    <div
+      class="pointer-events-none absolute left-1/2 -translate-x-1/2 h-[100dvh] opacity-0"
+      style="top: clamp(24px, 8vw, 80px); width: min(750px, calc(100% - 32px));"
+      transition:name="carta"
+      aria-hidden="true"
+    >
+    </div>
     <Frame width="min(750px, 100%)" border="3px solid #8D6FAE" padding="2px">
       <Frame
         padding="clamp(20px, 8vw, 85px)"
@@ -106,16 +120,11 @@ const rsvpPhoneNumber = "50242432127";
             <span
               class="relative font-baskervville-sc text-[#8D6FAE] text-[clamp(72px,22vw,190px)] leading-[0.85]"
             >
-              <!-- Punto de llegada de la transicion: comparte nombre con el
-                   sobre de la portada. Va aqui y no en el marco porque este
-                   mide 343x2558 en movil, y nombrarlo obligaba al navegador a
-                   rasterizar 30MB de textura para animarlo. -->
               <Image
                 src={corona}
                 width={1774}
                 height={887}
                 alt="Corona decorativa"
-                transition:name="carta"
                 class="absolute bottom-full left-1/2 -translate-x-1/2 mb-[-0.1em] w-[clamp(130px,34vw,200px)] max-w-none h-auto"
               />
               15
