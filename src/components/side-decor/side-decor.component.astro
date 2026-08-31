@@ -5,8 +5,9 @@ import mariposas from "../../Images/mariposas_moradas.svg";
 import rama from "../../Images/rama_morada.svg";
 import rosas from "../../Images/rosas_moradas.svg";
 import globos from "../../Images/globos_morados.svg";
+import mariposa from "../../Images/mariposa_morada.svg";
 
-type Kind = "flor" | "mariposas" | "rama" | "rosas" | "globos";
+type Kind = "flor" | "mariposas" | "rama" | "rosas" | "globos" | "mariposa";
 
 interface Props {
   class?: string;
@@ -27,6 +28,7 @@ const sources = {
   rama: { src: rama, width: 578, height: 812, alt: "" },
   rosas: { src: rosas, width: 997, height: 1034, alt: "" },
   globos: { src: globos, width: 1000, height: 1284, alt: "" },
+  mariposa: { src: mariposa, width: 700, height: 521, alt: "" },
 } satisfies Record<Kind, { src: ImageMetadata; width: number; height: number; alt: string }>;
 
 const asset = sources[kind];

@@ -6,6 +6,7 @@ interface Props {
   background?: string;
   width?: string;
   class?: string;
+  [key: string]: unknown;
 }
 
 const {
@@ -15,10 +16,11 @@ const {
   background = "#E8E1EF",
   width = "100%",
   class: className,
+  ...rest
 } = Astro.props;
 ---
 
-<div class:list={['frame', className]}>
+<div class:list={['frame', className]} {...rest}>
   <slot />
 </div>
 
@@ -30,7 +32,7 @@ const {
     padding: var(--padding);
     border: var(--border);
     background: var(--background);
-    background-image: url('../../Images/noise-light.png');
+    background-image: url('../../Images/noise-soft.png');
     /* background-size: 300px; */
     /* Solo arriba: abajo el marco sigue recto en lugar de cerrarse en curva. */
     border-radius: 99999px 99999px 0 0;

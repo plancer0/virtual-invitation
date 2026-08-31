@@ -27,8 +27,59 @@ body {
   align-items: center;
   padding: clamp(24px, 8vw, 80px) 16px;
   background-color: var(--color-base);
-  background-image: url('../Images/noise-light.png');
+  /* Trama en morado oscuro, no blanca: sobre el fondo lila claro el ruido
+     blanco original solo variaba 4 niveles de color y era invisible. */
+  background-image: url('../Images/noise-soft.png');
   /* background-size: 300px; */
+}
+
+/* ---- Transicion entre portada e invitacion ----
+   El elemento con transition:name="carta" (el sobre y el marco) lo interpola
+   el navegador por su cuenta. Aqui se define como se comporta el resto de la
+   pagina para que acompane ese movimiento en vez de competir con el. */
+::view-transition-old(root) {
+  animation: portada-sale 0.4s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+::view-transition-new(root) {
+  animation: invitacion-entra 0.55s cubic-bezier(0, 0, 0.2, 1) both;
+}
+
+/* El sobre/marco se mueve mas despacio y con una curva suave, para que la
+   transformacion se lea como una apertura. */
+::view-transition-group(carta) {
+  animation-duration: 0.7s;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+::view-transition-old(carta),
+::view-transition-new(carta) {
+  /* Sin recorte: deja que las dos cajas se fundan mientras se deforman. */
+  mix-blend-mode: normal;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes portada-sale {
+  to {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes invitacion-entra {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-group(carta) {
+    animation: none;
+  }
 }
 
 .corner-decor {
