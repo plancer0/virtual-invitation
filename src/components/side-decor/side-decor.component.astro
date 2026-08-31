@@ -1,7 +1,9 @@
 ---
 import { Image } from "astro:assets";
 import flor from "../../Images/flor_vectorial_morada.svg";
-import mariposas from "../../Images/mariposas_moradas.svg";
+// En WebP y no en SVG: el vectorial pesaba 1 MB y traia 2239 trazos que el
+// navegador debe interpretar en cada pintado, para mostrarse a 130px.
+import mariposas from "../../Images/mariposas_moradas.webp";
 import rama from "../../Images/rama_morada.svg";
 import rosas from "../../Images/rosas_moradas.svg";
 import globos from "../../Images/globos_morados.svg";
@@ -24,7 +26,7 @@ const { class: className, flip = false, kind = "flor", ...rest } = Astro.props;
 // recoloreados al matiz de la paleta a partir de los originales.
 const sources = {
   flor: { src: flor, width: 941, height: 1672, alt: "" },
-  mariposas: { src: mariposas, width: 614, height: 963, alt: "" },
+  mariposas: { src: mariposas, width: 520, height: 816, alt: "" },
   rama: { src: rama, width: 578, height: 812, alt: "" },
   rosas: { src: rosas, width: 997, height: 1034, alt: "" },
   globos: { src: globos, width: 1000, height: 1284, alt: "" },

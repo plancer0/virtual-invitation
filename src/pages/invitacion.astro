@@ -16,7 +16,9 @@ import SideDecor from "../components/side-decor/side-decor.component.astro";
 import CubeDecor from "../components/cube-decor/cube-decor.component.astro";
 import RsvpButton from "../components/rsvp-button/rsvp-button.component.astro";
 import MusicPlayer from "../components/music-player/music-player.component.astro";
-import corona from "../Images/corona_morada_svg_exacta.svg";
+// En WebP y no en SVG: el original eran 2.2 MB de bitmap incrustado dentro de
+// un SVG, que Astro no podia optimizar ni redimensionar.
+import corona from "../Images/corona_morada.webp";
 import decor from "../Images/decor.png";
 import saco from "../Images/saco.png";
 import vestido from "../Images/vestido.png";
@@ -122,8 +124,8 @@ const rsvpPhoneNumber = "50242432127";
             >
               <Image
                 src={corona}
-                width={1774}
-                height={887}
+                width={640}
+                height={316}
                 alt="Corona decorativa"
                 class="absolute bottom-full left-1/2 -translate-x-1/2 mb-[-0.1em] w-[clamp(130px,34vw,200px)] max-w-none h-auto"
               />

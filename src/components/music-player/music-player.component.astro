@@ -1,9 +1,13 @@
 ---
 ---
 
-<audio id="bg-audio" loop preload="auto">
+<!-- preload="none": la pista dura 16 minutos y pesa 7 MB. Con "auto" se
+     descargaba entera al abrir la pagina, aunque el visitante nunca le diera
+     al play. Ahora empieza a cargar cuando se reproduce.
+     Se quita la fuente FLAC: el navegador elige la primera compatible y todos
+     soportan MP3, asi que aquel archivo de 31 MB no se reproducia nunca. -->
+<audio id="bg-audio" loop preload="none">
   <source src="/audio/cancion.mp3" type="audio/mpeg" />
-  <source src="/audio/cancion.flac" type="audio/flac" />
 </audio>
 
 <button
