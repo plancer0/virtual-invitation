@@ -459,7 +459,11 @@ const rsvpPhoneNumber = "50242432127";
           clearProps: "transform",
           scrollTrigger: {
             trigger: el,
-            start: "top 88%",
+            // La ultima seccion se queda a unos 98px del pie, asi que al
+            // llegar al final del scroll su borde superior no baja del
+            // ~88% en pantallas altas: con el umbral anterior no se
+            // disparaba nunca y quedaba invisible en la mayoria de moviles.
+            start: "top 95%",
             once: true,
           },
         });
