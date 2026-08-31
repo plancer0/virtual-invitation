@@ -52,13 +52,9 @@ body {
   animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-::view-transition-old(carta),
-::view-transition-new(carta) {
-  /* Sin recorte: deja que las dos cajas se fundan mientras se deforman. */
-  mix-blend-mode: normal;
-  height: 100%;
-  object-fit: cover;
-}
+/* Sin forzar tamano ni recorte: el navegador ya escala y funde las dos cajas.
+   Imponer height/object-fit deformaba las imagenes al tener proporciones
+   distintas. */
 
 @keyframes portada-sale {
   to {

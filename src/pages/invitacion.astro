@@ -69,14 +69,7 @@ const rsvpPhoneNumber = "50242432127";
     <title>Invitacion de Rachell</title>
   </head>
   <body>
-    <!-- Comparte transition:name con el sobre de la portada: el navegador
-         transforma uno en otro al navegar. -->
-    <Frame
-      width="min(750px, 100%)"
-      border="3px solid #8D6FAE"
-      padding="2px"
-      transition:name="carta"
-    >
+    <Frame width="min(750px, 100%)" border="3px solid #8D6FAE" padding="2px">
       <Frame
         padding="clamp(20px, 8vw, 85px)"
         gap="clamp(20px, 4vw, 36px)"
@@ -113,11 +106,16 @@ const rsvpPhoneNumber = "50242432127";
             <span
               class="relative font-baskervville-sc text-[#8D6FAE] text-[clamp(72px,22vw,190px)] leading-[0.85]"
             >
+              <!-- Punto de llegada de la transicion: comparte nombre con el
+                   sobre de la portada. Va aqui y no en el marco porque este
+                   mide 343x2558 en movil, y nombrarlo obligaba al navegador a
+                   rasterizar 30MB de textura para animarlo. -->
               <Image
                 src={corona}
                 width={1774}
                 height={887}
                 alt="Corona decorativa"
+                transition:name="carta"
                 class="absolute bottom-full left-1/2 -translate-x-1/2 mb-[-0.1em] w-[clamp(130px,34vw,200px)] max-w-none h-auto"
               />
               15
