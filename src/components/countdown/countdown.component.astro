@@ -22,12 +22,12 @@ const units: { label: string; unit: "days" | "hours" | "minutes" | "seconds" }[]
     units.map(({ label, unit }) => (
       <div class="flex flex-col items-center gap-1 w-[clamp(56px,18vw,88px)] shrink-0">
         <span
-          class="countdown-value flex items-center justify-center w-full h-[clamp(56px,18vw,88px)] rounded-[16px] bg-[#D8D3DD] text-[#403848] font-baskervville text-[clamp(22px,7vw,36px)]"
+          class="countdown-value flex items-center justify-center w-full h-[clamp(56px,18vw,88px)] rounded-[16px] bg-detail-soft text-ink font-baskervville text-[clamp(22px,7vw,36px)]"
           data-unit={unit}
         >
           00
         </span>
-        <span class="text-[#8D6FAE] font-baskervville-sc text-[clamp(11px,3vw,15px)] uppercase tracking-wide">
+        <span class="text-accent font-baskervville-sc text-[clamp(11px,3vw,15px)] uppercase tracking-wide">
           {label}
         </span>
       </div>

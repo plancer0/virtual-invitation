@@ -80,7 +80,7 @@ const fotos = photos.slice(0, 4).map((foto, i) => ({
     /* El alto lo marca la foto, no la tarjeta: si se fija aqui, la proporcion
        del hueco de la foto cambia con cada breakpoint (los paddings usan
        clamps distintos) y el recorte sale distinto en cada dispositivo. */
-    background: #ffffff;
+    background: var(--color-polaroid);
     padding: clamp(10px, 2.4vw, 14px) clamp(10px, 2.4vw, 14px) clamp(34px, 8vw, 44px);
     /* Difuminado corto a proposito: el coste de pintar una sombra crece con el
        radio, y a 28px era de lo mas caro de la pagina en movil. */
@@ -98,14 +98,14 @@ const fotos = photos.slice(0, 4).map((foto, i) => ({
     /* Proporcion fija: identica en todos los dispositivos. Mas alta que antes
        para que las fotos verticales pierdan menos al recortarse. */
     aspect-ratio: 2 / 3;
-    background: #d8d3dd;
+    background: var(--color-photo-frame);
     /* overflow oculto para que object-cover recorte dentro del marco. */
     overflow: hidden;
   }
 
   .polaroid-photo span {
     font-family: var(--font-baskervville-sc);
-    color: #8d6fae;
+    color: var(--color-accent);
     font-size: clamp(11px, 3vw, 14px);
     letter-spacing: 0.04em;
   }

@@ -1,4 +1,5 @@
 import type { InvitationConfig } from "../types/invitation";
+import { palettes } from "./palettes";
 import { DISPLAY_DATE, EVENT_LOCATION } from "../lib/event";
 import foto1 from "../Images/1.jpeg";
 import foto2 from "../Images/2.jpeg";
@@ -19,6 +20,9 @@ const venueLng = -90.5618720207432;
  */
 export const invitation: InvitationConfig = {
   name: "Rachell",
+  // Cambiar esta linea retinta la pagina entera. Para una gama propia, en vez
+  // del nombre de una paleta se puede poner el objeto: { base: "#...", ... }.
+  palette: palettes.lila,
   parents: "Ronald y Mildred",
   date: DISPLAY_DATE,
 

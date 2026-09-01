@@ -3,8 +3,10 @@ import { Image } from "astro:assets";
 import BaseLayout from "../layouts/base.layout.astro";
 import Title from "../components/Title/title.component.astro";
 import { invitation } from "../config/invitation";
-import carta from "../Images/carta_morada.webp";
-import mariposa from "../Images/mariposas_silueta.svg";
+import { asset } from "../lib/assets";
+
+const carta = asset("carta");
+const mariposa = asset("mariposas-silueta");
 
 const quinceaneraName = invitation.name;
 
@@ -24,7 +26,7 @@ const mariposas = [
       <Title
         fontFamily="var(--font-meaculpa)"
         fontSize="clamp(64px, 20vw, 170px)"
-        color="#8D6FAE"
+        color="var(--color-accent)"
         class="leading-[0.9]"
       >
         {quinceaneraName}
@@ -32,7 +34,7 @@ const mariposas = [
 
       <!-- Desplazado a la derecha respecto al nombre. -->
       <p
-        class="self-center translate-x-[clamp(30px,12vw,110px)] font-baskervville-sc text-[#403848] text-[clamp(15px,4.4vw,26px)] tracking-[0.12em] uppercase"
+        class="self-center translate-x-[clamp(30px,12vw,110px)] font-baskervville-sc text-ink text-[clamp(15px,4.4vw,26px)] tracking-[0.12em] uppercase"
       >
         Mis quince años
       </p>
@@ -70,7 +72,7 @@ const mariposas = [
       </div>
 
       <p
-        class="mt-[clamp(20px,5vw,36px)] font-baskervville text-[#403848] text-[clamp(13px,3.6vw,17px)] text-center"
+        class="mt-[clamp(20px,5vw,36px)] font-baskervville text-ink text-[clamp(13px,3.6vw,17px)] text-center"
       >
         Presiona el sobre para abrirlo
       </p>

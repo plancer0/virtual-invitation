@@ -4,7 +4,7 @@ interface Props {
   color?: string;
 }
 
-const { class: className, color = "#8D6FAE" } = Astro.props;
+const { class: className, color = "var(--color-accent)" } = Astro.props;
 ---
 
 <div class:list={["flex gap-4", className]}>

@@ -4,7 +4,9 @@ import Title from "../Title/title.component.astro";
 import SideDecor from "../side-decor/side-decor.component.astro";
 import GeoDecor from "../geo-decor/geo-decor.component.astro";
 import { SECTION_VARS_WITH_BLEED } from "../../lib/layout";
-import decor from "../../Images/decor.png";
+import { asset } from "../../lib/assets";
+
+const decor = asset("decor");
 
 interface Props {
   /** Nombres de los padres. */
@@ -57,7 +59,7 @@ const { parents, title = "Mis padres" } = Astro.props;
     class="col-start-1 row-start-1 flex flex-col items-center justify-center gap-2 px-[clamp(16px,6vw,58px)] py-4"
   >
     <Title fontSize="clamp(24px, 6vw, 40px)">{title}</Title>
-    <Title fontFamily="var(--font-meaculpa)" fontSize="clamp(26px, 8vw, 64px)" color="#8D6FAE">
+    <Title fontFamily="var(--font-meaculpa)" fontSize="clamp(26px, 8vw, 64px)" color="var(--color-accent)">
       {parents}
     </Title>
     <div class="h-10 flex justify-center items-center w-full">

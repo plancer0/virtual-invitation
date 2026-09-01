@@ -3,7 +3,9 @@ import { Image } from "astro:assets";
 import Title from "../Title/title.component.astro";
 import SideDecor from "../side-decor/side-decor.component.astro";
 import { HERO_VARS } from "../../lib/layout";
-import corona from "../../Images/corona_morada.webp";
+import { asset } from "../../lib/assets";
+
+const corona = asset("corona");
 
 interface Props {
   /** Parrafo de bienvenida bajo el titulo. */
@@ -40,7 +42,7 @@ const { intro } = Astro.props;
       class="flex items-start leading-none font-meaculpa text-[clamp(20px,5.2vw,30px)] mt-[clamp(18px,5.5vw,35px)]"
       >Mis</span
     >
-    <span class="relative font-baskervville-sc text-[#8D6FAE] text-[clamp(72px,22vw,190px)] leading-[0.85]">
+    <span class="relative font-baskervville-sc text-accent text-[clamp(72px,22vw,190px)] leading-[0.85]">
       <Image
         src={corona}
         width={640}
@@ -55,7 +57,7 @@ const { intro } = Astro.props;
       >años</span
     >
   </Title>
-  <p class="font-baskervville text-[#403848] text-[clamp(14px,4vw,18px)] text-center max-w-[46ch]">
+  <p class="font-baskervville text-ink text-[clamp(14px,4vw,18px)] text-center max-w-[46ch]">
     {intro}
   </p>
 </div>

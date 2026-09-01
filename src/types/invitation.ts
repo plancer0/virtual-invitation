@@ -1,4 +1,5 @@
 import type { ImageMetadata } from "astro";
+import type { Palette } from "./palette";
 
 /** Un color destacado dentro de un texto, con su valor ya listo para pintar. */
 export interface HighlightedColor {
@@ -42,6 +43,9 @@ export interface PhotoConfig {
 export interface InvitationConfig {
   /** Nombre de la quinceanera. */
   name: string;
+  /** Color de toda la invitacion. Se puede tomar de `config/palettes.ts` o
+   *  escribir a mano. Ver `types/palette.ts`. */
+  palette: Palette;
   parents: string;
   /** Fecha que se pinta en pantalla. El instante absoluto vive en lib/event. */
   date: Date;

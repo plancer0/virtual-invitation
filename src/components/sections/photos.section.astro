@@ -45,13 +45,13 @@ const { name, caption, photos } = Astro.props;
   <Title
     fontSize="clamp(48px, 16vw, 128px)"
     fontFamily="var(--font-meaculpa)"
-    color="#403848"
+    color="var(--color-ink)"
     class="relative"
   >
     {name}
   </Title>
   <PolaroidPair photos={photos} class="relative w-full" />
-  <p class="relative font-baskervville text-[#403848] text-[clamp(14px,4vw,18px)] text-center max-w-[46ch]">
+  <p class="relative font-baskervville text-ink text-[clamp(14px,4vw,18px)] text-center max-w-[46ch]">
     {caption}
   </p>
 </div>
