@@ -1,0 +1,67 @@
+---
+import { Image } from "astro:assets";
+import Title from "../Title/title.component.astro";
+import SideDecor from "../side-decor/side-decor.component.astro";
+import GeoDecor from "../geo-decor/geo-decor.component.astro";
+import { SECTION_VARS_WITH_BLEED } from "../../lib/layout";
+import decor from "../../Images/decor.png";
+
+interface Props {
+  /** Nombres de los padres. */
+  parents: string;
+  title?: string;
+}
+
+const { parents, title = "Mis padres" } = Astro.props;
+---
+
+<div class="reveal relative grid w-full" style={SECTION_VARS_WITH_BLEED}>
+  <!-- Mariposas en la esquina superior derecha del rombo. -->
+  <SideDecor
+    kind="mariposas"
+    class="pointer-events-none absolute top-[4%] z-[1] w-[clamp(58px,15vw,112px)] origin-top-right rotate-[14deg]"
+    style="right: calc(var(--out) - 2%);"
+  />
+  <!-- Dos mariposas sueltas, una a la altura del titulo y otra a la de los
+       nombres. Los dos textos van centrados, asi que cada una se coloca desde
+       el centro: medio ancho del texto mas la separacion. Los clamp siguen el
+       crecimiento de cada tipografia (el titulo pasa de 57 a 95px de semiancho,
+       los nombres de 89 a 190px) para que la separacion no se descuadre.
+       El sobrante del ultimo clamp compensa que la rotacion agranda la caja
+       visual respecto a la de maquetacion. -->
+  <SideDecor
+    kind="mariposa"
+    class="pointer-events-none absolute top-1/2 -translate-y-1/2 z-[1] w-[clamp(46px,11vw,84px)] rotate-[-18deg]"
+    style="right: calc(50% + clamp(57px, 15.2vw, 95px) + clamp(24px, 6.5vw, 28px)); margin-top: calc(-1 * clamp(50px, 13vw, 76px));"
+  />
+  <SideDecor
+    kind="mariposa"
+    flip
+    class="pointer-events-none absolute top-1/2 -translate-y-1/2 z-[1] w-[clamp(36px,9vw,68px)] rotate-[22deg]"
+    style="left: calc(50% + clamp(89px, 23.7vw, 190px) + clamp(24px, 6.5vw, 28px)); margin-top: clamp(-2px, 0.8vw, 10px);"
+  />
+  <!-- El desplazamiento negativo saca el rombo del padding del Frame para que
+       sus vertices laterales toquen el borde del marco. -->
+  <GeoDecor
+    class="pointer-events-none absolute inset-y-0 h-full"
+    style="left: calc(-1 * var(--bleed)); width: calc(100% + 2 * var(--bleed));"
+  />
+  <!-- El padding en porcentaje se mide sobre el ancho, asi el alto de la
+       seccion sale del ancho del rombo. El 1.15 la hace algo mas alta que
+       ancha: es lo que deja que un rombo cuadrado asome por los lados sin que
+       asomen tambien las puntas de arriba y abajo. Debe coincidir con la
+       proporcion del viewBox (920/800). -->
+  <div class="col-start-1 row-start-1" style="padding-top: calc((100% + 2 * var(--bleed)) * 1.15);">
+  </div>
+  <div
+    class="col-start-1 row-start-1 flex flex-col items-center justify-center gap-2 px-[clamp(16px,6vw,58px)] py-4"
+  >
+    <Title fontSize="clamp(24px, 6vw, 40px)">{title}</Title>
+    <Title fontFamily="var(--font-meaculpa)" fontSize="clamp(26px, 8vw, 64px)" color="#8D6FAE">
+      {parents}
+    </Title>
+    <div class="h-10 flex justify-center items-center w-full">
+      <Image src={decor} height={40} alt="Decoracion" class="w-[clamp(130px,38vw,370px)] h-auto" />
+    </div>
+  </div>
+</div>

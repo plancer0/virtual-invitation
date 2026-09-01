@@ -1,0 +1,139 @@
+---
+import { Image } from "astro:assets";
+import Title from "../Title/title.component.astro";
+import InfoCube from "../info-cube/info-cube.component.astro";
+import MapModal from "../map-modal/map-modal.component.astro";
+import RsvpButton from "../rsvp-button/rsvp-button.component.astro";
+import SideDecor from "../side-decor/side-decor.component.astro";
+import CubeDecor from "../cube-decor/cube-decor.component.astro";
+import GiftIcons from "../gift-icons/gift-icons.component.astro";
+import { SECTION_VARS_WITH_BLEED } from "../../lib/layout";
+import type { DressCodeConfig, RsvpConfig, VenueConfig } from "../../types/invitation";
+import saco from "../../Images/saco.png";
+import vestido from "../../Images/vestido.png";
+
+interface Props {
+  date: Date;
+  venue: VenueConfig;
+  dressCode: DressCodeConfig;
+  rsvp: RsvpConfig;
+  /** Parrafo de la tarjeta de regalo. */
+  giftText: string;
+}
+
+const { date, venue, dressCode, rsvp, giftText } = Astro.props;
+
+const time = date.toLocaleTimeString("en-US", {
+  hour: "numeric",
+  minute: "2-digit",
+  hour12: true,
+});
+
+const rsvpDeadlineLabel = rsvp.deadline.toLocaleDateString("es-ES", {
+  day: "numeric",
+  month: "long",
+});
+---
+
+<div
+  class="reveal relative w-full pt-[clamp(44px,13vw,108px)] mb-[clamp(24px,6vw,48px)]"
+  style={SECTION_VARS_WITH_BLEED}
+>
+  <!-- Mariposa junto al galon, en el hueco superior del bloque. -->
+  <SideDecor
+    kind="mariposas"
+    flip
+    class="pointer-events-none absolute top-0 w-[clamp(46px,12vw,88px)] origin-top-left rotate-[-16deg]"
+    style="left: calc(var(--out) - 2%);"
+  />
+  <!-- Mismas ramas que en las fotos, pero mas pequenas y mucho mas hundidas:
+       las celdas del cubo dejan solo ~58px de margen lateral, asi que a mayor
+       tamano invadian el texto. -->
+  <div
+    class="pointer-events-none absolute bottom-[4%] w-[clamp(100px,26vw,200px)] origin-bottom-left rotate-[26deg]"
+    style="left: calc(var(--out) - 29%);"
+  >
+    <SideDecor class="block w-full h-auto" />
+  </div>
+  <div
+    class="pointer-events-none absolute bottom-[4%] w-[clamp(100px,26vw,200px)] origin-bottom-right rotate-[-26deg]"
+    style="right: calc(var(--out) - 30%);"
+  >
+    <SideDecor flip class="block w-full h-auto" />
+  </div>
+  <!-- El galon ocupa el pt de este bloque, sangrado hasta el borde del marco
+       igual que el rombo. -->
+  <CubeDecor
+    class="pointer-events-none absolute top-0 h-auto"
+    style="left: calc(-1 * var(--bleed)); width: calc(100% + 2 * var(--bleed));"
+  />
+  <InfoCube class="relative">
+    <Fragment slot="a">
+      <Title fontSize="clamp(20px, 5vw, 28px)">Recepción</Title>
+      <p class="font-baskervville text-[#403848] text-[clamp(14px,4vw,18px)]">{time}</p>
+      <p class="font-baskervville text-[#403848] text-[clamp(14px,4vw,18px)]">{venue.name}</p>
+      <MapModal
+        googleMapsUrl={venue.googleMapsUrl}
+        appleMapsUrl={venue.appleMapsUrl}
+        wazeUrl={venue.wazeUrl}
+        uberUrl={venue.uberUrl}
+      />
+    </Fragment>
+
+    <Fragment slot="b">
+      <div class="flex flex-wrap items-center justify-center gap-[clamp(8px,2.5vw,14px)]">
+        <!-- Las dos prendas se superponen con posicion absoluta; el contenedor
+             calcula su tamano desde las tres variables para que el solape y la
+             elevacion escalen juntos. -->
+        <div
+          class="relative shrink-0"
+          style="--dc-img: clamp(40px, 13vw, 58px); --dc-lift: clamp(5px, 1.6vw, 9px); --dc-overlap: clamp(10px, 3.2vw, 15px); width: calc(var(--dc-img) * 2 - var(--dc-overlap)); height: calc(var(--dc-img) * 1.076 + var(--dc-lift));"
+        >
+          <Image
+            src={vestido}
+            width={250}
+            height={269}
+            alt="Vestido de gala"
+            class="absolute left-0 bottom-0 w-[var(--dc-img)] h-auto max-w-none"
+          />
+          <Image
+            src={saco}
+            width={250}
+            height={269}
+            alt="Saco de gala"
+            class="absolute right-0 top-0 w-[var(--dc-img)] h-auto max-w-none"
+          />
+        </div>
+        <div class="flex flex-col items-center gap-1 flex-1 min-w-[105px]">
+          <Title fontSize="clamp(18px, 4.6vw, 24px)">{dressCode.type}</Title>
+          <p class="font-baskervville text-[#403848] text-[clamp(13px,3.6vw,16px)]">
+            Colores reservados: {
+              dressCode.reservedColors.map((color, i) => (
+                <>
+                  {i > 0 && " y "}
+                  <span class="font-semibold" style={`color:${color.hex}`}>
+                    {color.name}
+                  </span>
+                </>
+              ))
+            }
+          </p>
+        </div>
+      </div>
+    </Fragment>
+
+    <Fragment slot="c">
+      <Title fontSize="clamp(20px, 5vw, 28px)">Confirmación de asistencia</Title>
+      <p class="font-baskervville text-[#403848] text-[clamp(13px,3.6vw,16px)]">
+        Por favor confirma tu asistencia antes del {rsvpDeadlineLabel}.
+      </p>
+      <RsvpButton phoneNumber={rsvp.phoneNumber} fixed={false} class="mt-1" />
+    </Fragment>
+
+    <Fragment slot="d">
+      <Title fontSize="clamp(20px, 5vw, 28px)">Sugerencia de regalo</Title>
+      <p class="font-baskervville text-[#403848] text-[clamp(13px,3.6vw,16px)]">{giftText}</p>
+      <GiftIcons class="mt-1" />
+    </Fragment>
+  </InfoCube>
+</div>

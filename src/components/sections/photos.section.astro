@@ -1,0 +1,57 @@
+---
+import Title from "../Title/title.component.astro";
+import SideDecor from "../side-decor/side-decor.component.astro";
+import PolaroidPair from "../polaroid-pair/polaroid-pair.component.astro";
+import { SECTION_VARS } from "../../lib/layout";
+import type { PhotoConfig } from "../../types/invitation";
+
+interface Props {
+  name: string;
+  /** Parrafo bajo las fotos. */
+  caption: string;
+  photos: PhotoConfig[];
+}
+
+const { name, caption, photos } = Astro.props;
+---
+
+<div
+  class="reveal relative flex w-full flex-col items-center gap-6 px-[clamp(16px,6vw,58px)]"
+  style={SECTION_VARS}
+>
+  <!-- Mariposa asomando por la derecha, sobre el nombre. -->
+  <SideDecor
+    kind="mariposas"
+    class="pointer-events-none absolute top-[10%] w-[clamp(66px,17vw,150px)] origin-top-right rotate-[10deg]"
+    style="right: calc(var(--out) - 0%);"
+  />
+  <!-- Ramas laterales, detras de las fotos. La rotacion va en el contenedor,
+       con el pivote en la esquina inferior, para que la rama parezca brotar de
+       ahi. El reflejo se queda en la imagen: si ambos compartieran elemento, el
+       volteo moveria el punto de giro. La base se sale de la pantalla a
+       proposito; el recorte lo hace html/body en global.css. -->
+  <div
+    class="pointer-events-none absolute bottom-[8%] w-[clamp(130px,34vw,260px)] origin-bottom-left rotate-[26deg]"
+    style="left: calc(var(--out) - 28%);"
+  >
+    <SideDecor class="block w-full h-auto" />
+  </div>
+  <div
+    class="pointer-events-none absolute bottom-[8%] w-[clamp(130px,34vw,260px)] origin-bottom-right rotate-[-26deg]"
+    style="right: calc(var(--out) - 28%);"
+  >
+    <SideDecor flip class="block w-full h-auto" />
+  </div>
+  <Title
+    fontSize="clamp(48px, 16vw, 128px)"
+    fontFamily="var(--font-meaculpa)"
+    color="#403848"
+    class="relative"
+  >
+    {name}
+  </Title>
+  <PolaroidPair photos={photos} class="relative w-full" />
+  <p class="relative font-baskervville text-[#403848] text-[clamp(14px,4vw,18px)] text-center max-w-[46ch]">
+    {caption}
+  </p>
+</div>

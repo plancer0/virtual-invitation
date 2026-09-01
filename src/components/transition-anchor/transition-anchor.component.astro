@@ -1,0 +1,27 @@
+---
+import { BODY_PADDING_TOP, FRAME_WIDTH_INNER } from "../../lib/layout";
+
+interface Props {
+  /** Debe coincidir con el transition:name del elemento de la otra pagina. */
+  name: string;
+}
+
+const { name } = Astro.props;
+---
+
+<!-- Caja invisible que recibe la transformacion del sobre de la portada.
+     Ocupa el sitio y el ancho del marco pero solo el alto de la pantalla, y
+     el efecto se ve igual que abriendose hacia toda la pagina porque mas alla
+     del viewport no hay nada que ver.
+
+     No se nombra el marco real: mide 2558px de alto en movil y obligaba al
+     navegador a rasterizar unos 30MB de contenido pintado en cada frame, que
+     era lo que trababa la animacion. Esta caja no pinta nada, asi que su
+     textura es practicamente gratis. -->
+<div
+  class="pointer-events-none absolute left-1/2 -translate-x-1/2 h-[100dvh] opacity-0"
+  style={`top: ${BODY_PADDING_TOP}; width: ${FRAME_WIDTH_INNER};`}
+  transition:name={name}
+  aria-hidden="true"
+>
+</div>

@@ -1,473 +1,53 @@
 ---
-import "../styles/global.css";
-import "../components/frame/frame.component.astro";
+import BaseLayout from "../layouts/base.layout.astro";
 import Frame from "../components/frame/frame.component.astro";
-import Title from "../components/Title/title.component.astro";
-import { Font } from "astro:assets";
-import { Image } from "astro:assets";
-import { ClientRouter } from "astro:transitions";
-import CalendarComponent from "../components/calendar/calendar.component.astro";
-import CountdownComponent from "../components/countdown/countdown.component.astro";
-import PolaroidPair from "../components/polaroid-pair/polaroid-pair.component.astro";
-import InfoCube from "../components/info-cube/info-cube.component.astro";
-import MapModal from "../components/map-modal/map-modal.component.astro";
-import GeoDecor from "../components/geo-decor/geo-decor.component.astro";
-import SideDecor from "../components/side-decor/side-decor.component.astro";
-import CubeDecor from "../components/cube-decor/cube-decor.component.astro";
-import RsvpButton from "../components/rsvp-button/rsvp-button.component.astro";
 import MusicPlayer from "../components/music-player/music-player.component.astro";
-// En WebP y no en SVG: el original eran 2.2 MB de bitmap incrustado dentro de
-// un SVG, que Astro no podia optimizar ni redimensionar.
-import corona from "../Images/corona_morada.webp";
-import decor from "../Images/decor.png";
-import saco from "../Images/saco.png";
-import vestido from "../Images/vestido.png";
-import { DISPLAY_DATE } from "../lib/event";
-
-const date = DISPLAY_DATE;
-const quinceaneraName = "Rachell";
-const parentsNames = "Ronald y Mildred";
-
-const venueName = "Chalet la Rioja";
-const venueQuery = encodeURIComponent(`${venueName}, Amatitlán, Guatemala`);
-const venueLat = 14.452510771339947;
-const venueLng = -90.5618720207432;
-
-const googleMapsUrl = "https://maps.app.goo.gl/pmV3aJcxpxYGNmWp9";
-const appleMapsUrl = "https://maps.apple/p/77-YP_gU.WBj7A";
-const wazeUrl = "https://waze.com/ul/h9fxd5nyz3";
-const uberMapsUrl = `https://m.uber.com/ul/?action=setPickup&dropoff[latitude]=${venueLat}&dropoff[longitude]=${venueLng}&dropoff[formatted_address]=${venueQuery}&dropoff[nickname]=${encodeURIComponent(venueName)}`;
-
-const dressCodeType = "Gala";
-// El plateado va en un gris frio oscurecido: el plata real (#C0C0C0) sobre el
-// fondo lila queda ilegible.
-const dressCodeColors = [
-  { name: "Morado", hex: "#8D6FAE" },
-  { name: "Plateado", hex: "#7C7C8A" },
-];
-
-const rsvpDeadline = new Date("2026-10-01T00:00:00");
-const rsvpDeadlineLabel = rsvpDeadline.toLocaleDateString("es-ES", {
-  day: "numeric",
-  month: "long",
-});
-
-const rsvpPhoneNumber = "50242432127";
+import RevealOnScroll from "../components/reveal-on-scroll/reveal-on-scroll.component.astro";
+import TransitionAnchor from "../components/transition-anchor/transition-anchor.component.astro";
+import HeroSection from "../components/sections/hero.section.astro";
+import PhotosSection from "../components/sections/photos.section.astro";
+import ParentsSection from "../components/sections/parents.section.astro";
+import DateSection from "../components/sections/date.section.astro";
+import DetailsSection from "../components/sections/details.section.astro";
+import ClosingSection from "../components/sections/closing.section.astro";
+import { invitation } from "../config/invitation";
+import { FRAME_PADDING, FRAME_WIDTH } from "../lib/layout";
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <Font cssVariable="--baskervville" preload />
-    <Font cssVariable="--baskervville-sc" preload />
+<BaseLayout title={`Invitacion de ${invitation.name}`}>
+  <TransitionAnchor name="carta" />
 
-    <Font cssVariable="--meaculpa" preload />
-    <ClientRouter />
-
-    <title>Invitacion de Rachell</title>
-  </head>
-  <body>
-    <!-- Ancla invisible de la transicion desde la portada: ocupa el sitio y el
-         ancho del marco, pero solo el alto de la pantalla. El sobre se
-         transforma en ella y el efecto se ve igual que abriendose hacia toda
-         la pagina, porque mas alla del viewport no hay nada que ver.
-         No se nombra el marco real: mide 2558px de alto y obligaba al
-         navegador a rasterizar 30MB de contenido pintado en cada frame. Esta
-         caja no pinta nada, asi que su textura es practicamente gratis. -->
-    <div
-      class="pointer-events-none absolute left-1/2 -translate-x-1/2 h-[100dvh] opacity-0"
-      style="top: clamp(24px, 8vw, 80px); width: min(750px, calc(100% - 32px));"
-      transition:name="carta"
-      aria-hidden="true"
+  <Frame width={FRAME_WIDTH} border="3px solid #8D6FAE" padding="2px">
+    <Frame
+      padding={FRAME_PADDING}
+      gap="clamp(20px, 4vw, 36px)"
+      border="none"
+      class="justify-center items-center"
     >
-    </div>
-    <Frame width="min(750px, 100%)" border="3px solid #8D6FAE" padding="2px">
-      <Frame
-        padding="clamp(20px, 8vw, 85px)"
-        gap="clamp(20px, 4vw, 36px)"
-        border="none"
-        class="justify-center items-center"
-      >
-        <div
-          class="reveal relative flex w-full flex-col items-center gap-3 px-[clamp(16px,6vw,58px)]"
-          style="--out: calc(-1 * (clamp(20px, 8vw, 85px) + 21px)); --out-top: calc(-1 * (clamp(24px, 8vw, 80px) + clamp(20px, 8vw, 85px) + 5px) - clamp(50px, 14vw, 105px));"
-        >
-          <!-- Rosas en las esquinas superiores. El desplazamiento vertical suma
-               el padding del body, el del Frame y su borde, mas un extra para
-               que la esquina quede cortada por el filo de la pantalla. -->
-          <div
-            class="pointer-events-none absolute w-[clamp(140px,36vw,280px)] origin-top-left rotate-[9deg]"
-            style="left: calc(var(--out) - 12%); top: var(--out-top);"
-          >
-            <SideDecor kind="rosas" class="block w-full h-auto" />
-          </div>
-          <div
-            class="pointer-events-none absolute w-[clamp(140px,36vw,280px)] origin-top-right rotate-[-9deg]"
-            style="right: calc(var(--out) - 12%); top: var(--out-top);"
-          >
-            <SideDecor kind="rosas" flip class="block w-full h-auto" />
-          </div>
-          <Title
-            fontSize="clamp(28px, 7vw, 40px)"
-            class="relative flex items-stretch justify-center gap-[clamp(8px,2.5vw,16px)] pt-[clamp(62px,17.5vw,90px)]"
-          >
-            <span
-              class="flex items-start leading-none font-meaculpa text-[clamp(20px,5.2vw,30px)] mt-[clamp(18px,5.5vw,35px)]"
-              >Mis</span
-            >
-            <span
-              class="relative font-baskervville-sc text-[#8D6FAE] text-[clamp(72px,22vw,190px)] leading-[0.85]"
-            >
-              <Image
-                src={corona}
-                width={640}
-                height={316}
-                alt="Corona decorativa"
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-[-0.1em] w-[clamp(130px,34vw,200px)] max-w-none h-auto"
-              />
-              15
-            </span>
-            <span
-              class="flex items-end font-meaculpa leading-none text-[clamp(20px,5.2vw,30px)] mb-[clamp(5px,1.6vw,10px)]"
-              >años</span
-            >
-          </Title>
-          <p class="font-baskervville text-[#403848] text-[clamp(14px,4vw,18px)] text-center max-w-[46ch]">
-            Hay momentos que se guardan para siempre, y este es uno de ellos. Acompáñame a
-            celebrar mis quince rodeada de las personas que más quiero, y hagamos de esta
-            noche un recuerdo inolvidable.
-          </p>
-        </div>
+      <HeroSection intro={invitation.texts.intro} />
 
-        <div
-          class="reveal relative flex w-full flex-col items-center gap-6 px-[clamp(16px,6vw,58px)]"
-          style="--out: calc(-1 * (clamp(20px, 8vw, 85px) + 21px));"
-        >
-          <!-- Mariposa asomando por la izquierda, sobre el nombre. -->
-         <SideDecor
-            kind="mariposas"
-            class="pointer-events-none absolute top-[10%] w-[clamp(66px,17vw,150px)] origin-top-right rotate-[10deg]"
-            style="right: calc(var(--out) - 0%);"
-          />
-          <!-- Ramas laterales, detras de las fotos. El desplazamiento es el
-               padding del Frame mas el del body: en movil eso deja el borde de
-               la rama justo en el filo de la pantalla. Se evita 50vw a
-               proposito, porque incluye la barra de scroll y provocaba
-               desbordamiento horizontal en escritorio. -->
-          <!-- La rotacion va en el contenedor, con el pivote en la esquina
-               inferior, para que la rama parezca brotar de ahi. El reflejo se
-               queda en la imagen: si ambos compartieran elemento, el volteo
-               moveria el punto de giro. La base se sale de la pantalla a
-               proposito; el recorte lo hace html/body en global.css. -->
-          <div
-            class="pointer-events-none absolute bottom-[8%] w-[clamp(130px,34vw,260px)] origin-bottom-left rotate-[26deg]"
-            style="left: calc(var(--out) - 28%);"
-          >
-            <SideDecor class="block w-full h-auto" />
-          </div>
-          <div
-            class="pointer-events-none absolute bottom-[8%] w-[clamp(130px,34vw,260px)] origin-bottom-right rotate-[-26deg]"
-            style="right: calc(var(--out) - 28%);"
-          >
-            <SideDecor flip class="block w-full h-auto" />
-          </div>
-          <Title
-            fontSize="clamp(48px, 16vw, 128px)"
-            fontFamily="var(--font-meaculpa)"
-            color="#403848"
-            class="relative"
-          >
-            {quinceaneraName}
-          </Title>
-          <PolaroidPair class="relative w-full" />
-          <p class="relative font-baskervville text-[#403848] text-[clamp(14px,4vw,18px)] text-center max-w-[46ch]">
-            Hoy escribo un nuevo capítulo y quiero compartirlo contigo.
-          </p>
-        </div>
+      <PhotosSection
+        name={invitation.name}
+        caption={invitation.texts.photos}
+        photos={invitation.photos}
+      />
 
-        <div
-          class="reveal relative grid w-full"
-          style="--bleed: clamp(20px, 8vw, 85px); --out: calc(-1 * (clamp(20px, 8vw, 85px) + 21px));"
-        >
-          <!-- Mariposas en la esquina superior derecha del rombo. -->
-          <SideDecor
-            kind="mariposas"
-            class="pointer-events-none absolute top-[4%] z-[1] w-[clamp(58px,15vw,112px)] origin-top-right rotate-[14deg]"
-            style="right: calc(var(--out) - 2%);"
-          />
-          <!-- Dos mariposas volando por los costados: una a la altura del
-               titulo "Mis padres" y otra a la de los nombres. Se anclan al
-               centro de la seccion con un desfase en clamp, no con un
-               porcentaje: la seccion crece con el ancho (el rombo es cuadrado)
-               mientras que el texto no, asi que un % las descuadraba en
-               escritorio. Distinto tamano e inclinacion para que no se lean
-               como la misma imagen repetida. -->
-          <!-- Los dos textos van centrados en la seccion, asi que cada mariposa
-               se coloca desde el centro: medio ancho del texto mas 20px de
-               separacion. Los clamp siguen el crecimiento de cada tipografia
-               (el titulo pasa de 57 a 95px de semiancho, los nombres de 89 a
-               190px), de modo que la separacion se mantiene en todos los
-               tamanos. -->
-          <SideDecor
-            kind="mariposa"
-            class="pointer-events-none absolute top-1/2 -translate-y-1/2 z-[1] w-[clamp(46px,11vw,84px)] rotate-[-18deg]"
-            style="right: calc(50% + clamp(57px, 15.2vw, 95px) + clamp(24px, 6.5vw, 28px)); margin-top: calc(-1 * clamp(50px, 13vw, 76px));"
-          />
-          <SideDecor
-            kind="mariposa"
-            flip
-            class="pointer-events-none absolute top-1/2 -translate-y-1/2 z-[1] w-[clamp(36px,9vw,68px)] rotate-[22deg]"
-            style="left: calc(50% + clamp(89px, 23.7vw, 190px) + clamp(24px, 6.5vw, 28px)); margin-top: clamp(-2px, 0.8vw, 10px);"
-          />
-          <!-- El desplazamiento negativo saca el rombo del padding del Frame
-               para que sus vertices laterales toquen el borde del marco. -->
-          <GeoDecor
-            class="pointer-events-none absolute inset-y-0 h-full"
-            style="left: calc(-1 * var(--bleed)); width: calc(100% + 2 * var(--bleed));"
-          />
-          <!-- El padding en porcentaje se mide sobre el ancho, asi el alto de
-               la seccion sale del ancho del rombo. El 1.15 la hace algo mas
-               alta que ancha: es lo que deja que un rombo cuadrado asome por
-               los lados sin que asomen tambien las puntas de arriba y abajo.
-               Debe coincidir con la proporcion del viewBox (920/800). -->
-          <div
-            class="col-start-1 row-start-1"
-            style="padding-top: calc((100% + 2 * var(--bleed)) * 1.15);"
-          >
-          </div>
-          <div
-            class="col-start-1 row-start-1 flex flex-col items-center justify-center gap-2 px-[clamp(16px,6vw,58px)] py-4"
-          >
-            <Title fontSize="clamp(24px, 6vw, 40px)">Mis padres</Title>
-            <Title
-              fontFamily="var(--font-meaculpa)"
-              fontSize="clamp(26px, 8vw, 64px)"
-              color="#8D6FAE"
-            >
-              {parentsNames}
-            </Title>
-            <div class="h-10 flex justify-center items-center w-full">
-              <Image
-                src={decor}
-                height={40}
-                alt="Decoracion"
-                class="w-[clamp(130px,38vw,370px)] h-auto"
-              />
-            </div>
-          </div>
-        </div>
+      <ParentsSection parents={invitation.parents} />
 
-        <div
-          class="reveal relative flex w-full flex-col items-center gap-8 px-[clamp(16px,6vw,58px)]"
-          style="--out: calc(-1 * (clamp(20px, 8vw, 85px) + 21px));"
-        >
-          <!-- Globos entrando por la derecha, cortados por el filo de la
-               pantalla: mismo desplazamiento que el resto de decoraciones. -->
-          <div
-            class="pointer-events-none absolute top-[34%] -translate-y-1/2 w-[clamp(96px,25vw,190px)] origin-right rotate-[10deg]"
-            style="right: calc(var(--out) - 13%);"
-          >
-            <SideDecor kind="globos" class="block w-full h-auto" />
-          </div>
+      <DateSection date={invitation.date} />
 
-          <div
-            class="pointer-events-none absolute top-[20%] -translate-y-1/2 w-[clamp(96px,25vw,190px)] origin-right rotate-[10deg]"
-            style="left: calc(var(--out) - 13%);"
-          >
-            <SideDecor kind="globos" class="block w-full h-auto" />
-          </div>
-          <!-- Rama por la izquierda del calendario. -->
-          <CalendarComponent date={date} class="relative" />
-          <CountdownComponent date={date} class="relative" />
-        </div>
+      <DetailsSection
+        date={invitation.date}
+        venue={invitation.venue}
+        dressCode={invitation.dressCode}
+        rsvp={invitation.rsvp}
+        giftText={invitation.texts.gift}
+      />
 
-        <div
-          class="reveal relative w-full pt-[clamp(44px,13vw,108px)] mb-[clamp(24px,6vw,48px)]"
-          style="--bleed: clamp(20px, 8vw, 85px); --out: calc(-1 * (clamp(20px, 8vw, 85px) + 21px));"
-        >
-          <!-- Mariposa junto al galon, en el hueco superior del bloque. -->
-          <SideDecor
-            kind="mariposas"
-            flip
-            class="pointer-events-none absolute top-0 w-[clamp(46px,12vw,88px)] origin-top-left rotate-[-16deg]"
-            style="left: calc(var(--out) - 2%);"
-          />
-          <!-- Mismas ramas que en las fotos, brotando de las esquinas
-               inferiores. Aqui van mas pequenas y mucho mas hundidas hacia
-               fuera que en las fotos: las celdas del cubo dejan solo ~58px de
-               margen lateral, asi que a mayor tamano invadian el texto. -->
-          <div
-            class="pointer-events-none absolute bottom-[4%] w-[clamp(100px,26vw,200px)] origin-bottom-left rotate-[26deg]"
-            style="left: calc(var(--out) - 29%);"
-          >
-            <SideDecor class="block w-full h-auto" />
-          </div>
-          <div
-            class="pointer-events-none absolute bottom-[4%] w-[clamp(100px,26vw,200px)] origin-bottom-right rotate-[-26deg]"
-            style="right: calc(var(--out) - 30%);"
-          >
-            <SideDecor flip class="block w-full h-auto" />
-          </div>
-          <!-- El galon ocupa el pt de este bloque, sangrado hasta el borde del
-               marco igual que el rombo. -->
-          <CubeDecor
-            class="pointer-events-none absolute top-0 h-auto"
-            style="left: calc(-1 * var(--bleed)); width: calc(100% + 2 * var(--bleed));"
-          />
-          <InfoCube class="relative">
-          <Fragment slot="a">
-            <Title fontSize="clamp(20px, 5vw, 28px)">Recepción</Title>
-            <p class="font-baskervville text-[#403848] text-[clamp(14px,4vw,18px)]">
-              {date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
-            </p>
-            <p class="font-baskervville text-[#403848] text-[clamp(14px,4vw,18px)]">
-              {venueName}
-            </p>
-            <MapModal
-              googleMapsUrl={googleMapsUrl}
-              appleMapsUrl={appleMapsUrl}
-              wazeUrl={wazeUrl}
-              uberUrl={uberMapsUrl}
-            />
-          </Fragment>
-
-          <Fragment slot="b">
-            <div class="flex flex-wrap items-center justify-center gap-[clamp(8px,2.5vw,14px)]">
-              <div
-                class="relative shrink-0"
-                style="--dc-img: clamp(40px, 13vw, 58px); --dc-lift: clamp(5px, 1.6vw, 9px); --dc-overlap: clamp(10px, 3.2vw, 15px); width: calc(var(--dc-img) * 2 - var(--dc-overlap)); height: calc(var(--dc-img) * 1.076 + var(--dc-lift));"
-              >
-                <Image
-                  src={vestido}
-                  width={250}
-                  height={269}
-                  alt="Vestido de gala"
-                  class="absolute left-0 bottom-0 w-[var(--dc-img)] h-auto max-w-none"
-                />
-                <Image
-                  src={saco}
-                  width={250}
-                  height={269}
-                  alt="Saco de gala"
-                  class="absolute right-0 top-0 w-[var(--dc-img)] h-auto max-w-none"
-                />
-              </div>
-              <div class="flex flex-col items-center gap-1 flex-1 min-w-[105px]">
-                <Title fontSize="clamp(18px, 4.6vw, 24px)">{dressCodeType}</Title>
-                <p class="font-baskervville text-[#403848] text-[clamp(13px,3.6vw,16px)]">
-                  Colores reservados: {
-                    dressCodeColors.map((color, i) => (
-                      <>
-                        {i > 0 && " y "}
-                        <span class="font-semibold" style={`color:${color.hex}`}>
-                          {color.name}
-                        </span>
-                      </>
-                    ))
-                  }
-                </p>
-              </div>
-            </div>
-          </Fragment>
-
-          <Fragment slot="c">
-            <Title fontSize="clamp(20px, 5vw, 28px)">Confirmación de asistencia</Title>
-            <p class="font-baskervville text-[#403848] text-[clamp(13px,3.6vw,16px)]">
-              Por favor confirma tu asistencia antes del {rsvpDeadlineLabel}.
-            </p>
-            <RsvpButton phoneNumber={rsvpPhoneNumber} fixed={false} class="mt-1" />
-          </Fragment>
-
-          <Fragment slot="d">
-            <Title fontSize="clamp(20px, 5vw, 28px)">Sugerencia de regalo</Title>
-            <p class="font-baskervville text-[#403848] text-[clamp(13px,3.6vw,16px)]">
-              El mejor regalo es compartir este día con nosotros. Si gusta otorgar un
-              obsequio, se agradecerá que sea en efectivo.
-            </p>
-            <div class="flex gap-4 mt-1">
-              <svg viewBox="0 0 24 24" class="w-[clamp(24px,7vw,32px)] h-[clamp(24px,7vw,32px)]" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="9" width="18" height="12" rx="1.5" stroke="#8D6FAE" stroke-width="1.5" />
-                <path d="M3 13H21" stroke="#8D6FAE" stroke-width="1.5" />
-                <path d="M12 9V21" stroke="#8D6FAE" stroke-width="1.5" />
-                <path d="M12 9C12 9 8 9 8 6C8 4.5 9.2 3.5 10.5 3.5C12 3.5 12 6 12 9Z" stroke="#8D6FAE" stroke-width="1.5" stroke-linejoin="round" />
-                <path d="M12 9C12 9 16 9 16 6C16 4.5 14.8 3.5 13.5 3.5C12 3.5 12 6 12 9Z" stroke="#8D6FAE" stroke-width="1.5" stroke-linejoin="round" />
-              </svg>
-              <svg viewBox="0 0 24 24" class="w-[clamp(24px,7vw,32px)] h-[clamp(24px,7vw,32px)]" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2.5" y="5" width="19" height="14" rx="1.5" stroke="#8D6FAE" stroke-width="1.5" />
-                <path d="M3 6L12 13L21 6" stroke="#8D6FAE" stroke-width="1.5" stroke-linejoin="round" />
-              </svg>
-            </div>
-          </Fragment>
-          </InfoCube>
-        </div>
-
-        <div
-          class="reveal relative flex w-full flex-col items-center px-[clamp(16px,6vw,58px)]"
-          style="--out: calc(-1 * (clamp(20px, 8vw, 85px) + 21px));"
-        >
-          <!-- Mariposas alejandose por arriba, cerrando el recorrido. -->
-          <SideDecor
-            kind="mariposas"
-            class="pointer-events-none absolute -top-[clamp(58px,16vw,120px)] w-[clamp(50px,13vw,96px)] origin-top-right rotate-[18deg]"
-            style="right: var(--out);"
-          />
-          <!-- Rosas cerrando la invitacion, una a cada lado del titulo. La
-               rotacion va en el contenedor y el volteo en la imagen: si
-               compartieran elemento, el origen del giro desplazaria el volteo
-               y las dos dejarian de estar a la misma altura. -->
-          <div
-            class="pointer-events-none absolute bottom-0 w-[clamp(78px,20vw,150px)] origin-bottom-left rotate-[12deg]"
-            style="left: calc(var(--out) - 10%);"
-          >
-            <SideDecor kind="rosas" class="block w-full h-auto" />
-          </div>
-          <div
-            class="pointer-events-none absolute bottom-0 w-[clamp(78px,20vw,150px)] origin-bottom-right rotate-[-12deg]"
-            style="right: calc(var(--out) - 10%);"
-          >
-            <SideDecor kind="rosas" flip class="block w-full h-auto" />
-          </div>
-          <Title
-            class="relative"
-            fontFamily="var(--font-meaculpa)"
-            fontSize="clamp(40px, 11vw, 88px)"
-            color="#8D6FAE"
-          >
-            Te esperamos
-          </Title>
-        </div>
-      </Frame>
+      <ClosingSection text={invitation.texts.closing} />
     </Frame>
-    <MusicPlayer />
+  </Frame>
 
-    <script>
-      import gsap from "gsap";
-      import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-      gsap.registerPlugin(ScrollTrigger);
-
-      gsap.utils.toArray<HTMLElement>(".reveal").forEach((el) => {
-        gsap.from(el, {
-          opacity: 0,
-          y: 28,
-          duration: 0.9,
-          ease: "power2.out",
-          clearProps: "transform",
-          scrollTrigger: {
-            trigger: el,
-            // La ultima seccion se queda a unos 98px del pie, asi que al
-            // llegar al final del scroll su borde superior no baja del
-            // ~88% en pantallas altas: con el umbral anterior no se
-            // disparaba nunca y quedaba invisible en la mayoria de moviles.
-            start: "top 95%",
-            once: true,
-          },
-        });
-      });
-    </script>
-  </body>
-</html>
+  <MusicPlayer />
+  <RevealOnScroll />
+</BaseLayout>

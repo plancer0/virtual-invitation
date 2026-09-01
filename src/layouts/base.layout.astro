@@ -1,0 +1,36 @@
+---
+import "../styles/global.css";
+import { Font } from "astro:assets";
+import { ClientRouter } from "astro:transitions";
+
+interface Props {
+  title: string;
+  /** Idioma del documento. */
+  lang?: string;
+  /** Clases para el <body>: la portada anula el centrado del body global. */
+  bodyClass?: string;
+}
+
+const { title, lang = "es", bodyClass } = Astro.props;
+---
+
+<!-- Cabecera comun a portada e invitacion: fuentes, iconos y el router de
+     transiciones. Las dos paginas deben cargar el mismo ClientRouter para que
+     la navegacion entre ellas se anime. -->
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <Font cssVariable="--baskervville" preload />
+    <Font cssVariable="--baskervville-sc" preload />
+    <Font cssVariable="--meaculpa" preload />
+    <ClientRouter />
+    <title>{title}</title>
+  </head>
+  <body class={bodyClass}>
+    <slot />
+  </body>
+</html>
