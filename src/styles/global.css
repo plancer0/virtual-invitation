@@ -60,6 +60,18 @@ body {
   object-fit: cover;
 }
 
+/* Al volver atras hay que invertir el sentido: con las mismas animaciones que
+   la ida, la portada volvia "entrando" como si avanzase, el movimiento no se
+   leia como un retroceso y con el gesto del telefono apenas se notaba.
+   Astro marca la direccion en el html con data-astro-transition. */
+:root[data-astro-transition="back"]::view-transition-old(root) {
+  animation: invitacion-sale 0.4s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+:root[data-astro-transition="back"]::view-transition-new(root) {
+  animation: portada-entra 0.55s cubic-bezier(0, 0, 0.2, 1) both;
+}
+
 @keyframes portada-sale {
   to {
     opacity: 0;
@@ -74,10 +86,28 @@ body {
   }
 }
 
+/* Espejo de las anteriores: la invitacion se encoge al irse y la portada
+   vuelve desde el acercamiento en el que se habia quedado. */
+@keyframes invitacion-sale {
+  to {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+@keyframes portada-entra {
+  from {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
   ::view-transition-new(root),
-  ::view-transition-group(carta) {
+  ::view-transition-group(carta),
+  :root[data-astro-transition="back"]::view-transition-old(root),
+  :root[data-astro-transition="back"]::view-transition-new(root) {
     animation: none;
   }
 }
