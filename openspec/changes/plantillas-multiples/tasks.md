@@ -32,24 +32,24 @@ Chain strategy: pending
 
 ## Phase 1: Typography Interface (PR 1, commit 1a)
 
-- [ ] 1.1 Add a 13-token `--text-*` block to `@theme` in `src/styles/global.css`: the 11 named tokens plus `--text-title-alt` (`clamp(28px,7vw,40px)`, from `hero.section.astro:38`) and `--text-subtitle-alt` (`clamp(18px,4.6vw,24px)`, from `details.section.astro:110`) — Stage 2 merge candidates (D4). Each value copy-pasted; doc comment records source `file:line`.
-- [ ] 1.2 Create `src/types/typography.ts`: `TextToken` (13-member union), `TitleSize = TextToken` (mirrors `src/types/palette.ts`).
-- [ ] 1.3 Create `src/lib/typography.ts`: `TITLE_SIZE_CLASS: Record<TitleSize, string>` lookup (mirrors `src/lib/palette.ts`).
-- [ ] 1.4 Modify `src/components/Title/title.component.astro`: `fontSize?: string` → `size?: TitleSize`; remove `font-size` from the scoped `<style>` block; keep `define:vars` for `color`/`fontFamily`; apply via `class:list={[TITLE_SIZE_CLASS[size], className]}` (D3).
-- [ ] 1.5 Migrate `Title`'s 10 call sites, including `hero.section.astro:38` → `title-alt` and `details.section.astro:110` → `subtitle-alt`.
-- [ ] 1.6 Verify: temporarily pass an invalid `size` at one call site, confirm `pnpm run build` fails on that site, then revert.
+- [x] 1.1 Add a 13-token `--text-*` block to `@theme` in `src/styles/global.css`: the 11 named tokens plus `--text-title-alt` (`clamp(28px,7vw,40px)`, from `hero.section.astro:38`) and `--text-subtitle-alt` (`clamp(18px,4.6vw,24px)`, from `details.section.astro:110`) — Stage 2 merge candidates (D4). Each value copy-pasted; doc comment records source `file:line`.
+- [x] 1.2 Create `src/types/typography.ts`: `TextToken` (13-member union), `TitleSize = TextToken` (mirrors `src/types/palette.ts`).
+- [x] 1.3 Create `src/lib/typography.ts`: `TITLE_SIZE_CLASS: Record<TitleSize, string>` lookup (mirrors `src/lib/palette.ts`).
+- [x] 1.4 Modify `src/components/Title/title.component.astro`: `fontSize?: string` → `size?: TitleSize`; remove `font-size` from the scoped `<style>` block; keep `define:vars` for `color`/`fontFamily`; apply via `class:list={[TITLE_SIZE_CLASS[size], className]}` (D3).
+- [x] 1.5 Migrate `Title`'s 10 call sites, including `hero.section.astro:38` → `title-alt` and `details.section.astro:110` → `subtitle-alt`.
+- [~] 1.6 Verify: temporarily pass an invalid `size` at one call site, confirm `pnpm run build` fails on that site, then revert. **Partial / negative result**: the probe was run and reverted, but `pnpm run build` did NOT fail on the invalid value — `astro build` performs no TypeScript diagnostics in this repo (no `astro check` step wired into `build`, and `typescript`/`@astrojs/check` are not installed devDependencies). The `TitleSize` union is correctly typed and would be flagged by an editor/LSP or by `tsc`, but the build script as configured cannot enforce it. See report for detail; no dependency was added to fix this (out of this batch's scope/budget).
 
 ## Phase 2: Typography Mechanical Migration (PR 1, commit 1b)
 
-- [ ] 2.1 For each of the 13 tokens, run both exact-string searches — `text-[clamp(...)]` (no spaces) and `font-size: clamp(...)` (spaced) — across `calendar`, `countdown`, `polaroid-pair`, `map-modal`, `rsvp-button`, `hero`, `photos`, `details`, and the `index`/`invitacion` pages; replace with the matching utility or `var(--text-*)` (D5 §2).
-- [ ] 2.2 On the 6 dual-value lines (`index.astro:75`, `map-modal.component.astro:17`, `hero.section.astro:39,56`, `rsvp-button.component.astro:27,30`), substitute only the typography portion; leave the spacing literal untouched for PR 2.
-- [ ] 2.3 Record `token | literal | occurrences replaced` in the PR body; counts must sum to the pre-change typography occurrence count (D5 §3).
+- [x] 2.1 For each of the 13 tokens, run both exact-string searches — `text-[clamp(...)]` (no spaces) and `font-size: clamp(...)` (spaced) — across `calendar`, `countdown`, `polaroid-pair`, `map-modal`, `rsvp-button`, `hero`, `photos`, `details`, and the `index`/`invitacion` pages; replace with the matching utility or `var(--text-*)` (D5 §2).
+- [x] 2.2 On the 6 dual-value lines (`index.astro:75`, `map-modal.component.astro:17`, `hero.section.astro:39,56`, `rsvp-button.component.astro:27,30`), substitute only the typography portion; leave the spacing literal untouched for PR 2. **Finding**: only `map-modal.component.astro:17` actually had an exact-match typography literal to substitute; the other 5 either have no exact token match (residual, deferred) or (`hero.section.astro:39`) carry no typography value at all on that exact line — see report for the corrected line-by-line breakdown.
+- [x] 2.3 Record `token | literal | occurrences replaced` in the PR body; counts must sum to the pre-change typography occurrence count (D5 §3). Sum = 21, matches. See report for the full table.
 
 ## Phase 3: Typography Verification (PR 1)
 
-- [ ] 3.1 Run V1–V4 and V7: build exit 0 with baseline-matching warning set (only `lila`); `css-identity.mjs` empty diff; all 13 tokens and their generated utilities present in `dist/_astro/*.css`; `rg "text-\[clamp|font-size:\s*clamp" src/` hits equal exactly the PR-body deferral manifest.
-- [ ] 3.2 Run V9: manual visual check, 5 widths, against the Phase 0 baseline screenshots — no text baseline or block edge moves.
-- [ ] 3.3 Add a typography section to `AGENTS.md` at colour-axis depth: the D2 naming rule ("name by the most stable true property"), the token table, the escape-hatch example, and a note on the two provisional Stage-2 tokens.
+- [~] 3.1 Run V1–V4 and V7: build exit 0 with baseline-matching warning set (only `lila`) — **pass**; `css-identity.mjs` empty diff — **does not pass**, 9 declaration-count differences, all fully explained (see report), none is an actual computed-value regression; all 13 tokens and their generated utilities present in `dist/_astro/*.css` — **pass**; `rg "text-\[clamp|font-size:\s*clamp" src/` hits equal exactly the PR-body deferral manifest — **pass**, 15 residual lines, listed in report.
+- [ ] 3.2 Run V9: manual visual check, 5 widths, against the Phase 0 baseline screenshots — **NOT run by sdd-apply**, no browser tool available in this session. Orchestrator must run this against `openspec/changes/plantillas-multiples/style-baseline.md`'s computed-style hashes.
+- [x] 3.3 Add a typography section to `AGENTS.md` at colour-axis depth: the D2 naming rule ("name by the most stable true property"), the token table, the escape-hatch example, and a note on the two provisional Stage-2 tokens.
 
 ## Phase 4: Spacing Tokens & Migration (PR 2, branches from PR 1)
 

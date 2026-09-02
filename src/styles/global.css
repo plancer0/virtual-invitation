@@ -34,6 +34,44 @@
   --color-accent-soft: #c9b6e4;
   /** Cartulina de la polaroid. */
   --color-polaroid: #ffffff;
+
+  /* ---- Tipografia ----
+     El nombre de cada token es su rol tipografico, no su tamano: un ordinal
+     miente en cuanto se inserta un escalon nuevo entre dos existentes, y un
+     rol sobrevive a un reescalado. Ver AGENTS.md para la regla completa.
+
+     Stage 1 sustituye cada literal por su token sin cambiar ningun valor
+     computado. `-alt` marca un candidato a fusion de Stage 2: casi duplica a
+     otro token, pero difiere hasta 4px a 360px, asi que fusionarlo ahora
+     rompería esa invariante. Existen porque `Title` usa una union cerrada y
+     total: sin ellos, esos dos sitios de uso no tendrían token que expresarlos. */
+
+  /** Leyendas y aclaraciones. Fuente: calendar.component.astro:36 */
+  --text-caption: clamp(11px, 3vw, 14px);
+  /** Texto corrido. Fuente: map-modal.component.astro:17 */
+  --text-body: clamp(13px, 3.6vw, 16px);
+  /** Subtitulo de portada. Fuente: index.astro:37 */
+  --text-lead: clamp(15px, 4.4vw, 26px);
+  /** Encabezado de calendario. Fuente: calendar.component.astro:30 */
+  --text-subtitle: clamp(18px, 5vw, 24px);
+  /** Stage 2 merge candidate, cercano a `subtitle`. Fuente: details.section.astro:110 */
+  --text-subtitle-alt: clamp(18px, 4.6vw, 24px);
+  /** Encabezados de tarjeta (Titulo). Fuente: map-modal.component.astro:36 */
+  --text-emphasis: clamp(20px, 5vw, 28px);
+  /** Cifras de la cuenta atras. Fuente: countdown.component.astro:25 */
+  --text-figure: clamp(22px, 7vw, 36px);
+  /** Titulo de seccion. Fuente: parents.section.astro:61 */
+  --text-title: clamp(24px, 6vw, 40px);
+  /** Stage 2 merge candidate, cercano a `title`. Fuente: hero.section.astro:38 */
+  --text-title-alt: clamp(28px, 7vw, 40px);
+  /** Titulo de seccion en Mea Culpa. Fuente: parents.section.astro:62 */
+  --text-title-lg: clamp(26px, 8vw, 64px);
+  /** Titulo de cierre. Fuente: closing.section.astro:43 */
+  --text-heading: clamp(40px, 11vw, 88px);
+  /** Nombre de la quinceañera en portada de una seccion. Fuente: photos.section.astro:46 */
+  --text-name: clamp(48px, 16vw, 128px);
+  /** Nombre de la quinceañera en portada. Fuente: index.astro:28 */
+  --text-name-lg: clamp(64px, 20vw, 170px);
 }
 
 /* Las decoraciones se salen del marco y de la pantalla a proposito. `clip`

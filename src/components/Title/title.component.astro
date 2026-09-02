@@ -1,22 +1,24 @@
 ---
+import type { TitleSize } from "../../types/typography";
+import { TITLE_SIZE_CLASS } from "../../lib/typography";
+
 interface Props {
     color?: string;
-    fontSize?: string;
+    size?: TitleSize;
     fontFamily?: string;
     class?: string;
 }
 
-const { color="var(--color-ink)", fontSize="40px", fontFamily="var(--font-baskervville)", class: className} = Astro.props;
+const { color="var(--color-ink)", size="title", fontFamily="var(--font-baskervville)", class: className} = Astro.props;
 ---
 
-<h1 class:list={[className]}>
+<h1 class:list={[TITLE_SIZE_CLASS[size], className]}>
     <slot />
 </h1>
 
-<style define:vars={{color, fontSize, fontFamily}}>
+<style define:vars={{color, fontFamily}}>
     h1 {
         color: var(--color);
-        font-size: var(--fontSize);
         font-family: var(--fontFamily);
         text-align: center;
     }

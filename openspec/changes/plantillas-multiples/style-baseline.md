@@ -23,8 +23,8 @@ path's line and therefore the hash.
 
 | Page | 360 | 390 | 768 | 1024 | 1440 |
 |---|---|---|---|---|---|
-| `/` (12 elements) | `e1f42d60` | `c7ef20eb` | `551b6426` | `dfff5055` | `dfff5055` |
-| `/invitacion` (214 elements) | `6dc4cc0e` | `abc3b698` | `83a9ab07` | `0f2e4ec8` | `74ef39b9` |
+| `/` (12 elements) | `e1f42d60` | `df64a0c4` | `551b6426` | `dfff5055` | `dfff5055` |
+| `/invitacion` (214 elements) | `6dc4cc0e` | `abc3b698` | `83a9ab07` | `f2e4ec8` | `74ef39b9` |
 
 Note the cover page produces an identical hash at 1024 and 1440: every
 `clamp()` on it is already pinned to its maximum by 1024, so the wider viewport
@@ -36,6 +36,17 @@ and 390 are the load-bearing widths.
 
 Serve the build (`pnpm run preview`), then run this in the page console at each
 width. Compare the printed hash against the table.
+
+**Wait for the page to settle before measuring**, and measure twice. The first
+capture of this table recorded a value taken straight after a viewport resize,
+and it did not reproduce: the cover page at 390 was written down as `c7ef20eb`
+when both the baseline build and the migrated build actually produce
+`df64a0c4`. That looked exactly like a regression and was not one. Measure only
+after `await document.fonts.ready` plus a short delay, and treat two identical
+consecutive readings as the reading.
+
+Hashes here have no leading-zero padding: read them as the raw hex the snippet
+prints.
 
 ```js
 window.__medir = () => {

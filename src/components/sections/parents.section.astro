@@ -58,8 +58,8 @@ const { parents, title = "Mis padres" } = Astro.props;
   <div
     class="col-start-1 row-start-1 flex flex-col items-center justify-center gap-2 px-[clamp(16px,6vw,58px)] py-4"
   >
-    <Title fontSize="clamp(24px, 6vw, 40px)">{title}</Title>
-    <Title fontFamily="var(--font-meaculpa)" fontSize="clamp(26px, 8vw, 64px)" color="var(--color-accent)">
+    <Title size="title">{title}</Title>
+    <Title fontFamily="var(--font-meaculpa)" size="title-lg" color="var(--color-accent)">
       {parents}
     </Title>
     <div class="h-10 flex justify-center items-center w-full">
