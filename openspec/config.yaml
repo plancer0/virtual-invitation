@@ -1,0 +1,71 @@
+# openspec/config.yaml
+schema: spec-driven
+
+context: |
+  Static Astro 7.2.0 site: virtual quinceañera invitation (2 pages).
+  Stack: astro ^7.2.0 (static output), tailwindcss ^4.3.3 (CSS-first @theme,
+  no tailwind.config), gsap ^3.15.0 (ScrollTrigger), sharp ^0.35.3 (asset
+  recolouring script). pnpm 11.23.0, Node >=22.12.0.
+  Architecture: config-driven (src/config/*.ts) + lib helpers (src/lib/*.ts)
+  + Astro components/sections (src/components/**). No test runner installed.
+  Style: colour system centralised in palettes, never hardcoded in components
+  (see AGENTS.md).
+
+testing:
+  strict_tdd: false
+  test_command: null
+  test_runner: null
+  reason: No test runner, test script, or test files exist in this repo.
+    A runner (e.g. Vitest) would need to be installed and wired up before
+    strict TDD can apply.
+  layers:
+    unit: false
+    integration: false
+    e2e: false
+  coverage:
+    available: false
+    command: null
+  quality:
+    linter:
+      available: false
+      command: null
+    type_checker:
+      available: false
+      command: null
+      note: "tsconfig extends astro/tsconfigs/strict but no typescript or
+        @astrojs/check devDependency/script is installed; astro build does
+        type-aware compilation implicitly."
+    formatter:
+      available: false
+      command: null
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+    - Note that no automated test safety net exists; call out manual
+      verification steps (visual check on / and /invitacion, both palettes
+      affected, mobile + desktop viewport)
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Include sequence diagrams for complex flows
+    - Document architecture decisions with rationale
+    - Respect the existing colour system: no hardcoded colors in components,
+      everything flows from src/config/palettes.ts
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+  apply:
+    guidelines:
+      - Follow existing code patterns (src/config, src/lib, src/components)
+      - Never hardcode colors; use the palette system (see AGENTS.md)
+      - Run `pnpm run assets` after any palette change before building
+    tdd: false           # No test runner installed; strict TDD not applicable
+    test_command: ""
+  verify:
+    test_command: ""
+    build_command: "pnpm run build"
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas
