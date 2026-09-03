@@ -26,9 +26,9 @@ Chain strategy: pending
 
 ## Phase 0: Baseline & Verification Script (PR 0)
 
-- [ ] 0.1 On the merge-base commit: `pnpm run build`, copy `dist` to `$env:TEMP\vi-baseline-dist`, screenshot `/` and `/invitacion` at the 5 widths.
-- [ ] 0.2 Create `scripts/css-identity.mjs` (~90 lines, plain `node:fs`, no subprocess): expand `var(--text-*)`/`var(--spacing-*)` against `:root`, normalize whitespace, diff sorted declaration sets between two `dist` paths; fail loudly on a missing/non-directory path — never report an empty diff on error (threat matrix: path arguments).
-- [ ] 0.3 Verify: run it against the baseline vs. itself — empty diff.
+- [~] 0.1 On the merge-base commit: `pnpm run build`, copy `dist` to `$env:TEMP\vi-baseline-dist`, screenshot `/` and `/invitacion` at the 5 widths. **Partial**: build + copy to `/c/Users/MSI/AppData/Local/Temp/vi-baseline-dist` done by sdd-apply (no PowerShell available in-session, used the Bash-equivalent path). Screenshots NOT taken by sdd-apply (no browser tool available) — orchestrator to capture the visual baseline separately.
+- [x] 0.2 Create `scripts/css-identity.mjs` (~90 lines, plain `node:fs`, no subprocess): expand `var(--text-*)`/`var(--spacing-*)` against `:root`, normalize whitespace, diff sorted declaration sets between two `dist` paths; fail loudly on a missing/non-directory path — never report an empty diff on error (threat matrix: path arguments).
+- [x] 0.3 Verify: run it against the baseline vs. itself — empty diff.
 
 ## Phase 1: Typography Interface (PR 1, commit 1a)
 
