@@ -1,0 +1,35 @@
+---
+import CalendarComponent from "../calendar/calendar.component.astro";
+import CountdownComponent from "../countdown/countdown.component.astro";
+import SideDecor from "../side-decor/side-decor.component.astro";
+import { SECTION_VARS } from "../../lib/layout";
+
+interface Props {
+  date: Date;
+}
+
+const { date } = Astro.props;
+---
+
+<div
+  class="reveal relative flex w-full flex-col items-center gap-8 px-[clamp(16px,6vw,58px)]"
+  style={SECTION_VARS}
+>
+  <!-- Globos entrando por los costados, cortados por el filo de la pantalla:
+       mismo desplazamiento que el resto de decoraciones. El de la derecha no
+       puede acercarse mas al centro sin taparle los numeros al calendario. -->
+  <div
+    class="pointer-events-none absolute top-[34%] -translate-y-1/2 w-[clamp(96px,25vw,190px)] origin-right rotate-[10deg]"
+    style="right: calc(var(--out) - 13%);"
+  >
+    <SideDecor kind="globos" class="block w-full h-auto" />
+  </div>
+  <div
+    class="pointer-events-none absolute top-[20%] -translate-y-1/2 w-[clamp(96px,25vw,190px)] origin-right rotate-[10deg]"
+    style="left: calc(var(--out) - 13%);"
+  >
+    <SideDecor kind="globos" class="block w-full h-auto" />
+  </div>
+  <CalendarComponent date={date} class="relative" />
+  <CountdownComponent date={date} class="relative" />
+</div>

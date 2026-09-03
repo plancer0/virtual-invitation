@@ -1,13 +1,19 @@
 ---
 import { Image } from "astro:assets";
-import flor from "../../Images/flor_vectorial_morada.svg";
+import { asset } from "../../lib/assets";
 // En WebP y no en SVG: el vectorial pesaba 1 MB y traia 2239 trazos que el
 // navegador debe interpretar en cada pintado, para mostrarse a 130px.
-import mariposas from "../../Images/mariposas_moradas.webp";
-import rama from "../../Images/rama_morada.svg";
-import rosas from "../../Images/rosas_moradas.svg";
-import globos from "../../Images/globos_morados.svg";
-import mariposa from "../../Images/mariposa_morada.svg";
+
+
+
+
+
+const flor = asset("flor");
+const mariposas = asset("mariposas");
+const rama = asset("rama");
+const rosas = asset("rosas");
+const globos = asset("globos");
+const mariposa = asset("mariposa");
 
 type Kind = "flor" | "mariposas" | "rama" | "rosas" | "globos" | "mariposa";
 
@@ -33,13 +39,13 @@ const sources = {
   mariposa: { src: mariposa, width: 700, height: 521, alt: "" },
 } satisfies Record<Kind, { src: ImageMetadata; width: number; height: number; alt: string }>;
 
-const asset = sources[kind];
+const imagen = sources[kind];
 ---
 
 <Image
-  src={asset.src}
-  width={asset.width}
-  height={asset.height}
+  src={imagen.src}
+  width={imagen.width}
+  height={imagen.height}
   alt=""
   aria-hidden="true"
   class:list={[className, flip && "-scale-x-100"]}

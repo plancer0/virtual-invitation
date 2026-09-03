@@ -6,7 +6,7 @@ interface Props {
   [key: string]: unknown;
 }
 
-const { class: className, color = "#b1a0c7", accent = "#D8D3DD", ...rest } = Astro.props;
+const { class: className, color = "var(--color-detail)", accent = "var(--color-detail-soft)", ...rest } = Astro.props;
 ---
 
 <!-- Galon sobre el cubo: dos brazos inclinados que nacen en los costados y

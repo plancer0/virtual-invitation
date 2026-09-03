@@ -1,0 +1,32 @@
+---
+/**
+ * Revela con un desvanecido los elementos marcados con la clase `.reveal`.
+ * Se incluye una sola vez por pagina; no envuelve nada.
+ */
+---
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray<HTMLElement>(".reveal").forEach((el) => {
+    gsap.from(el, {
+      opacity: 0,
+      y: 28,
+      duration: 0.9,
+      ease: "power2.out",
+      clearProps: "transform",
+      scrollTrigger: {
+        trigger: el,
+        // La ultima seccion se queda a unos 98px del pie, asi que al llegar al
+        // final del scroll su borde superior no baja del ~88% en pantallas
+        // altas: con ese umbral no se disparaba nunca y quedaba invisible en la
+        // mayoria de moviles.
+        start: "top 95%",
+        once: true,
+      },
+    });
+  });
+</script>

@@ -1,0 +1,48 @@
+---
+import Title from "../Title/title.component.astro";
+import SideDecor from "../side-decor/side-decor.component.astro";
+import { SECTION_VARS } from "../../lib/layout";
+
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<div
+  class="reveal relative flex w-full flex-col items-center px-[clamp(16px,6vw,58px)]"
+  style={SECTION_VARS}
+>
+  <!-- Mariposas alejandose por arriba, cerrando el recorrido. Van al borde del
+       marco porque el titulo en Mea Culpa es muy ancho y a menos distancia se
+       cruzaban con el. -->
+  <SideDecor
+    kind="mariposas"
+    class="pointer-events-none absolute -top-[clamp(58px,16vw,120px)] w-[clamp(50px,13vw,96px)] origin-top-right rotate-[18deg]"
+    style="right: var(--out);"
+  />
+  <!-- Rosas a cada lado del titulo. La rotacion va en el contenedor y el volteo
+       en la imagen: si compartieran elemento, el origen del giro desplazaria el
+       volteo y las dos dejarian de estar a la misma altura. -->
+  <div
+    class="pointer-events-none absolute bottom-0 w-[clamp(78px,20vw,150px)] origin-bottom-left rotate-[12deg]"
+    style="left: calc(var(--out) - 10%);"
+  >
+    <SideDecor kind="rosas" class="block w-full h-auto" />
+  </div>
+  <div
+    class="pointer-events-none absolute bottom-0 w-[clamp(78px,20vw,150px)] origin-bottom-right rotate-[-12deg]"
+    style="right: calc(var(--out) - 10%);"
+  >
+    <SideDecor kind="rosas" flip class="block w-full h-auto" />
+  </div>
+  <Title
+    class="relative"
+    fontFamily="var(--font-meaculpa)"
+    fontSize="clamp(40px, 11vw, 88px)"
+    color="var(--color-accent)"
+  >
+    {text}
+  </Title>
+</div>

@@ -7,9 +7,10 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/recolor-assets.mjs && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "assets": "node scripts/recolor-assets.mjs --force"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

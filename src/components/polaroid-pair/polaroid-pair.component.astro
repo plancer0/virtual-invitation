@@ -1,29 +1,26 @@
 ---
 import { Image } from "astro:assets";
-import foto1 from "../../Images/1.jpeg";
-import foto2 from "../../Images/2.jpeg";
-import foto3 from "../../Images/3.jpeg";
-import foto4 from "../../Images/4.jpeg";
+import type { PhotoConfig } from "../../types/invitation";
 
 interface Props {
   class?: string;
+  /** Cuatro fotos, en el orden en que se despliegan. */
+  photos: PhotoConfig[];
 }
 
-const { class: className } = Astro.props;
+const { class: className, photos } = Astro.props;
 
-// El orden de las tarjetas al desplegarse es: a arriba-izq, b arriba-der,
-// c abajo-izq, d abajo-der.
-// `pos` mueve el encuadre dentro del marco. La 4 es horizontal, asi que al
-// recortarla a vertical se pierde ancho y hay que elegir que lado conservar.
-// `zoom` acerca la imagen mas alla del encuadre de object-cover; el marco la
-// recorta porque lleva overflow oculto.
-const fotos = [
-  { role: "a", src: foto1, pos: "object-center", zoom: "" },
-  { role: "b", src: foto2, pos: "object-center", zoom: "" },
-  // La 3 es de cuerpo entero y muy alargada: centrada le cortaba la cabeza.
-  { role: "c", src: foto3, pos: "object-top", zoom: "" },
-  { role: "d", src: foto4, pos: "object-[93%_50%]", zoom: "scale-125 origin-right" },
-];
+// Al desplegarse: a arriba-izq, b arriba-der, c abajo-izq, d abajo-der.
+const roles = ["a", "b", "c", "d"];
+
+const fotos = photos.slice(0, 4).map((foto, i) => ({
+  role: roles[i],
+  src: foto.src,
+  // `position` mueve el encuadre dentro del marco; `zoom` acerca mas alla del
+  // encuadre de object-cover y el marco recorta, porque lleva overflow oculto.
+  pos: foto.position ?? "object-center",
+  zoom: foto.zoom ?? "",
+}));
 ---
 
 <div class:list={["polaroid-stage relative w-full flex justify-center items-center", className]}>
@@ -83,7 +80,7 @@ const fotos = [
     /* El alto lo marca la foto, no la tarjeta: si se fija aqui, la proporcion
        del hueco de la foto cambia con cada breakpoint (los paddings usan
        clamps distintos) y el recorte sale distinto en cada dispositivo. */
-    background: #ffffff;
+    background: var(--color-polaroid);
     padding: clamp(10px, 2.4vw, 14px) clamp(10px, 2.4vw, 14px) clamp(34px, 8vw, 44px);
     /* Difuminado corto a proposito: el coste de pintar una sombra crece con el
        radio, y a 28px era de lo mas caro de la pagina en movil. */
@@ -101,14 +98,14 @@ const fotos = [
     /* Proporcion fija: identica en todos los dispositivos. Mas alta que antes
        para que las fotos verticales pierdan menos al recortarse. */
     aspect-ratio: 2 / 3;
-    background: #d8d3dd;
+    background: var(--color-photo-frame);
     /* overflow oculto para que object-cover recorte dentro del marco. */
     overflow: hidden;
   }
 
   .polaroid-photo span {
     font-family: var(--font-baskervville-sc);
-    color: #8d6fae;
+    color: var(--color-accent);
     font-size: clamp(11px, 3vw, 14px);
     letter-spacing: 0.04em;
   }
