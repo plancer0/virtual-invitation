@@ -47,6 +47,98 @@ if (import.meta.env.PROD) {
     <title>{title}</title>
   </head>
   <body class={bodyClass}>
+    <!-- El audio vive aqui, no en el reproductor, y con transition:persist:
+         asi el mismo elemento sobrevive a la navegacion de cliente entre la
+         portada y la invitacion, y la musica no se corta ni se reinicia.
+         Antes estaba dentro de la invitacion, asi que al navegar nacia un
+         elemento nuevo que tenia que pedir permiso de autoplay por su cuenta.
+         preload="none": la pista pesa 7 MB y solo debe bajar si se reproduce. -->
+    <audio id="bg-audio" transition:persist loop preload="none">
+      <source src="/audio/cancion.mp3" type="audio/mpeg" />
+    </audio>
     <slot />
+<script>
+  /**
+   * La musica no puede depender de que el navegador conceda autoplay.
+   *
+   * Antes se llamaba a audio.play() al ejecutarse el script de la invitacion,
+   * confiando en que el navegador lo permitiera. En unos si y en otros no, sin
+   * aviso: el rechazo llegaba como una promesa que se descartaba en silencio.
+   * Y llegando por navegacion de cliente desde la portada, Safari no considera
+   * iniciada por el usuario una llamada posterior al gesto, aunque el gesto
+   * haya existido.
+   *
+   * Ahora la reproduccion empieza DENTRO del toque. El primer pointerdown de
+   * la sesion la arranca, y ese toque es casi siempre el del sobre. Empezar
+   * dentro del gesto es lo unico que aceptan todos los navegadores.
+   *
+   * Esto vive en el layout y no en el reproductor porque el gesto ocurre en la
+   * portada, donde el boton no se monta. El <audio> lleva transition:persist,
+   * asi que es el mismo elemento en las dos paginas y la musica no se corta al
+   * navegar.
+   */
+  const audio = document.getElementById("bg-audio") as HTMLAudioElement | null;
+
+  if (audio) {
+    // En local no arranca sola: durante el desarrollo se recarga la pagina
+    // decenas de veces. Ojo al depurar un fallo de reproduccion: en localhost
+    // el silencio es lo esperado, no el sintoma.
+    const isLocalhost = ["localhost", "127.0.0.1"].includes(location.hostname);
+
+    /** Pone el boton, si esta en la pagina actual, acorde al audio. */
+    const syncButton = () => {
+      const button = document.getElementById("music-toggle");
+      const iconPlay = document.getElementById("music-icon-play");
+      const iconPause = document.getElementById("music-icon-pause");
+      if (!button || !iconPlay || !iconPause) return;
+      const playing = !audio.paused;
+      iconPlay.classList.toggle("hidden", playing);
+      iconPause.classList.toggle("hidden", !playing);
+      button.setAttribute("aria-pressed", String(playing));
+      button.setAttribute("aria-label", playing ? "Pausar música" : "Reproducir música");
+    };
+
+    audio.addEventListener("play", syncButton);
+    audio.addEventListener("pause", syncButton);
+
+    if (!isLocalhost) {
+      // Por si alguien entra directo a la invitacion sin pasar por la portada:
+      // ahi no hay gesto que aprovechar y solo queda pedirlo.
+      audio.play().catch(() => {});
+
+      const startOnGesture = (event: Event) => {
+        const target = event.target;
+        const button = document.getElementById("music-toggle");
+        if (target instanceof Node && button?.contains(target)) return;
+        if (audio.paused) audio.play().catch(() => {});
+        document.removeEventListener("pointerdown", startOnGesture, true);
+        document.removeEventListener("keydown", startOnGesture, true);
+      };
+      // pointerdown y no click: ocurre antes, dentro del mismo gesto, y cubre
+      // raton y tactil sin duplicarse. En captura, para llegar antes que el
+      // enlace del sobre, que navega.
+      document.addEventListener("pointerdown", startOnGesture, true);
+      document.addEventListener("keydown", startOnGesture, true);
+    }
+
+    // El boton solo existe en la invitacion y se recrea en cada navegacion, asi
+    // que hay que recablearlo en cada carga. El audio persiste, por eso su
+    // estado se lee de el y no de una variable.
+    const bindButton = () => {
+      const button = document.getElementById("music-toggle");
+      if (!button || button.dataset.bound === "1") return;
+      button.dataset.bound = "1";
+      button.addEventListener("click", () => {
+        if (audio.paused) audio.play().catch(() => {});
+        else audio.pause();
+      });
+      syncButton();
+    };
+
+    bindButton();
+    document.addEventListener("astro:page-load", bindButton);
+  }
+</script>
+
   </body>
 </html>
