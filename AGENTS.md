@@ -55,6 +55,21 @@ lo hace por su cuenta.
   archivos tienen forma hexadecimal (`url(#a6fc157d5f)`). Un reemplazo global
   de `#rrggbb` rompe las referencias.
 
+## Music
+
+Playback starts inside the first pointer gesture, not by asking the browser for
+autoplay. The `<audio>` lives in `base.layout.astro` with `transition:persist`
+so it is the same element on both pages and the track never restarts.
+
+Two traps, both of which cost real time:
+
+- **`astro build` is not where a playback bug shows up.** Autoplay is disabled
+  on `localhost` on purpose, so silence during development is expected, not the
+  symptom. Reproduce against a deployed build, or flip that guard temporarily.
+- **A rejected `play()` is swallowed.** The `.catch(() => {})` is deliberate —
+  there is nothing useful to do about a refusal — but it means a failure leaves
+  no trace at all. Instrument the catch before concluding anything.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build

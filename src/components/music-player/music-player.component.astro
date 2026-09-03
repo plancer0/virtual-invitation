@@ -1,14 +1,9 @@
 ---
+// Aqui solo esta el boton. El <audio> y toda la logica viven en
+// base.layout.astro, porque la reproduccion tiene que poder arrancar desde el
+// toque en el sobre, y ese toque ocurre en la portada, donde este componente
+// no se monta.
 ---
-
-<!-- preload="none": la pista dura 16 minutos y pesa 7 MB. Con "auto" se
-     descargaba entera al abrir la pagina, aunque el visitante nunca le diera
-     al play. Ahora empieza a cargar cuando se reproduce.
-     Se quita la fuente FLAC: el navegador elige la primera compatible y todos
-     soportan MP3, asi que aquel archivo de 31 MB no se reproducia nunca. -->
-<audio id="bg-audio" loop preload="none">
-  <source src="/audio/cancion.mp3" type="audio/mpeg" />
-</audio>
 
 <button
   id="music-toggle"
@@ -39,51 +34,3 @@
     <path d="M6 5h4v14H6zM14 5h4v14h-4z"></path>
   </svg>
 </button>
-
-<script>
-  const audio = document.getElementById("bg-audio") as HTMLAudioElement | null;
-  const button = document.getElementById("music-toggle");
-  const iconPlay = document.getElementById("music-icon-play");
-  const iconPause = document.getElementById("music-icon-pause");
-
-  if (audio && button && iconPlay && iconPause) {
-    const setPlayingUI = (isPlaying: boolean) => {
-      iconPlay.classList.toggle("hidden", isPlaying);
-      iconPause.classList.toggle("hidden", !isPlaying);
-      button.setAttribute("aria-pressed", String(isPlaying));
-      button.setAttribute("aria-label", isPlaying ? "Pausar música" : "Reproducir música");
-    };
-
-    audio.addEventListener("play", () => setPlayingUI(true));
-    audio.addEventListener("pause", () => setPlayingUI(false));
-
-    const isLocalhost = ["localhost", "127.0.0.1"].includes(location.hostname);
-
-    if (!isLocalhost) {
-      // Try to autoplay as soon as the page loads.
-      audio.play().catch(() => {});
-
-      // Browsers block unmuted autoplay without a user gesture. As a fallback,
-      // start playback on the first interaction anywhere on the page (except
-      // the toggle button itself, which already handles play/pause on click).
-      const startOnFirstInteraction = (event: Event) => {
-        if (event.target instanceof Node && button.contains(event.target)) return;
-        if (audio.paused) audio.play().catch(() => {});
-        document.removeEventListener("pointerdown", startOnFirstInteraction);
-        document.removeEventListener("touchend", startOnFirstInteraction);
-        document.removeEventListener("keydown", startOnFirstInteraction);
-      };
-      document.addEventListener("pointerdown", startOnFirstInteraction);
-      document.addEventListener("touchend", startOnFirstInteraction);
-      document.addEventListener("keydown", startOnFirstInteraction);
-    }
-
-    button.addEventListener("click", () => {
-      if (audio.paused) {
-        audio.play().catch(() => {});
-      } else {
-        audio.pause();
-      }
-    });
-  }
-</script>
