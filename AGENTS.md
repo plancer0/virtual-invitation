@@ -255,6 +255,22 @@ alcance; salirse de la escala ahi si necesita un comentario de una linea.
   el token que citaban paso a existir); se corrigieron citando una clase
   distinta ya real o rompiendo el patron con un espacio.
 
+## Type checking
+
+`pnpm run build` runs `astro check` before compiling, so a type error stops the
+build. `pnpm run check` runs it alone.
+
+This exists to make one promise real. `Title` takes a closed union of token
+names, and the whole point of that is that an invented size becomes an error
+rather than a silently wrong page. Without `astro check` that was only a
+convention: `astro build` performs no TypeScript diagnostics on its own, so
+`size="45px"` compiled happily and rendered with no size at all.
+
+TypeScript is pinned to 6.x on purpose. The 7.x native compiler does not yet
+expose the programmatic API `astro check` depends on, and installing it makes
+the check fail to start rather than fail to find errors — which is worse, since
+it looks like it ran.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build

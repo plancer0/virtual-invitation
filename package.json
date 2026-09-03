@@ -7,10 +7,11 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/recolor-assets.mjs && astro build",
+    "build": "node scripts/recolor-assets.mjs && astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "assets": "node scripts/recolor-assets.mjs --force"
+    "assets": "node scripts/recolor-assets.mjs --force",
+    "check": "astro check"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -20,6 +21,8 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "@astrojs/compiler-binding-wasm32-wasi": "0.3.2"
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/compiler-binding-wasm32-wasi": "0.3.2",
+    "typescript": "^6.0.3"
   }
 }
