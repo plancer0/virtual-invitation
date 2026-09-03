@@ -35,14 +35,14 @@ const { intro } = Astro.props;
     <SideDecor kind="rosas" flip class="block w-full h-auto" />
   </div>
   <Title
-    fontSize="clamp(28px, 7vw, 40px)"
+    size="title-alt"
     class="relative flex items-stretch justify-center gap-[clamp(8px,2.5vw,16px)] pt-[clamp(62px,17.5vw,90px)]"
   >
     <span
-      class="flex items-start leading-none font-meaculpa text-[clamp(20px,5.2vw,30px)] mt-[clamp(18px,5.5vw,35px)]"
+      class="flex items-start leading-none font-meaculpa text-emphasis mt-[clamp(18px,5.5vw,35px)]"
       >Mis</span
     >
-    <span class="relative font-baskervville-sc text-accent text-[clamp(72px,22vw,190px)] leading-[0.85]">
+    <span class="relative font-baskervville-sc text-accent text-display leading-[0.85]">
       <Image
         src={corona}
         width={640}
@@ -53,11 +53,11 @@ const { intro } = Astro.props;
       15
     </span>
     <span
-      class="flex items-end font-meaculpa leading-none text-[clamp(20px,5.2vw,30px)] mb-[clamp(5px,1.6vw,10px)]"
+      class="flex items-end font-meaculpa leading-none text-emphasis mb-[clamp(5px,1.6vw,10px)]"
       >años</span
     >
   </Title>
-  <p class="font-baskervville text-ink text-[clamp(14px,4vw,18px)] text-center max-w-[46ch]">
+  <p class="font-baskervville text-ink text-body-lg text-center max-w-[46ch]">
     {intro}
   </p>
 </div>

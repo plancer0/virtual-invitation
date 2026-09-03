@@ -32,24 +32,39 @@ Chain strategy: pending
 
 ## Phase 1: Typography Interface (PR 1, commit 1a)
 
-- [ ] 1.1 Add a 13-token `--text-*` block to `@theme` in `src/styles/global.css`: the 11 named tokens plus `--text-title-alt` (`clamp(28px,7vw,40px)`, from `hero.section.astro:38`) and `--text-subtitle-alt` (`clamp(18px,4.6vw,24px)`, from `details.section.astro:110`) — Stage 2 merge candidates (D4). Each value copy-pasted; doc comment records source `file:line`.
-- [ ] 1.2 Create `src/types/typography.ts`: `TextToken` (13-member union), `TitleSize = TextToken` (mirrors `src/types/palette.ts`).
-- [ ] 1.3 Create `src/lib/typography.ts`: `TITLE_SIZE_CLASS: Record<TitleSize, string>` lookup (mirrors `src/lib/palette.ts`).
-- [ ] 1.4 Modify `src/components/Title/title.component.astro`: `fontSize?: string` → `size?: TitleSize`; remove `font-size` from the scoped `<style>` block; keep `define:vars` for `color`/`fontFamily`; apply via `class:list={[TITLE_SIZE_CLASS[size], className]}` (D3).
-- [ ] 1.5 Migrate `Title`'s 10 call sites, including `hero.section.astro:38` → `title-alt` and `details.section.astro:110` → `subtitle-alt`.
-- [ ] 1.6 Verify: temporarily pass an invalid `size` at one call site, confirm `pnpm run build` fails on that site, then revert.
+- [x] 1.1 Add a 13-token `--text-*` block to `@theme` in `src/styles/global.css`: the 11 named tokens plus `--text-title-alt` (`clamp(28px,7vw,40px)`, from `hero.section.astro:38`) and `--text-subtitle-alt` (`clamp(18px,4.6vw,24px)`, from `details.section.astro:110`) — Stage 2 merge candidates (D4). Each value copy-pasted; doc comment records source `file:line`.
+- [x] 1.2 Create `src/types/typography.ts`: `TextToken` (13-member union), `TitleSize = TextToken` (mirrors `src/types/palette.ts`).
+- [x] 1.3 Create `src/lib/typography.ts`: `TITLE_SIZE_CLASS: Record<TitleSize, string>` lookup (mirrors `src/lib/palette.ts`).
+- [x] 1.4 Modify `src/components/Title/title.component.astro`: `fontSize?: string` → `size?: TitleSize`; remove `font-size` from the scoped `<style>` block; keep `define:vars` for `color`/`fontFamily`; apply via `class:list={[TITLE_SIZE_CLASS[size], className]}` (D3).
+- [x] 1.5 Migrate `Title`'s 10 call sites, including `hero.section.astro:38` → `title-alt` and `details.section.astro:110` → `subtitle-alt`.
+- [~] 1.6 Verify: temporarily pass an invalid `size` at one call site, confirm `pnpm run build` fails on that site, then revert. **Partial / negative result**: the probe was run and reverted, but `pnpm run build` did NOT fail on the invalid value — `astro build` performs no TypeScript diagnostics in this repo (no `astro check` step wired into `build`, and `typescript`/`@astrojs/check` are not installed devDependencies). The `TitleSize` union is correctly typed and would be flagged by an editor/LSP or by `tsc`, but the build script as configured cannot enforce it. See report for detail; no dependency was added to fix this (out of this batch's scope/budget).
 
 ## Phase 2: Typography Mechanical Migration (PR 1, commit 1b)
 
-- [ ] 2.1 For each of the 13 tokens, run both exact-string searches — `text-[clamp(...)]` (no spaces) and `font-size: clamp(...)` (spaced) — across `calendar`, `countdown`, `polaroid-pair`, `map-modal`, `rsvp-button`, `hero`, `photos`, `details`, and the `index`/`invitacion` pages; replace with the matching utility or `var(--text-*)` (D5 §2).
-- [ ] 2.2 On the 6 dual-value lines (`index.astro:75`, `map-modal.component.astro:17`, `hero.section.astro:39,56`, `rsvp-button.component.astro:27,30`), substitute only the typography portion; leave the spacing literal untouched for PR 2.
-- [ ] 2.3 Record `token | literal | occurrences replaced` in the PR body; counts must sum to the pre-change typography occurrence count (D5 §3).
+- [x] 2.1 For each of the 13 tokens, run both exact-string searches — `text-[clamp(...)]` (no spaces) and `font-size: clamp(...)` (spaced) — across `calendar`, `countdown`, `polaroid-pair`, `map-modal`, `rsvp-button`, `hero`, `photos`, `details`, and the `index`/`invitacion` pages; replace with the matching utility or `var(--text-*)` (D5 §2).
+- [x] 2.2 On the 6 dual-value lines (`index.astro:75`, `map-modal.component.astro:17`, `hero.section.astro:39,56`, `rsvp-button.component.astro:27,30`), substitute only the typography portion; leave the spacing literal untouched for PR 2. **Finding**: only `map-modal.component.astro:17` actually had an exact-match typography literal to substitute; the other 5 either have no exact token match (residual, deferred) or (`hero.section.astro:39`) carry no typography value at all on that exact line — see report for the corrected line-by-line breakdown.
+- [x] 2.3 Record `token | literal | occurrences replaced` in the PR body; counts must sum to the pre-change typography occurrence count (D5 §3). Sum = 21, matches. See report for the full table.
 
 ## Phase 3: Typography Verification (PR 1)
 
-- [ ] 3.1 Run V1–V4 and V7: build exit 0 with baseline-matching warning set (only `lila`); `css-identity.mjs` empty diff; all 13 tokens and their generated utilities present in `dist/_astro/*.css`; `rg "text-\[clamp|font-size:\s*clamp" src/` hits equal exactly the PR-body deferral manifest.
-- [ ] 3.2 Run V9: manual visual check, 5 widths, against the Phase 0 baseline screenshots — no text baseline or block edge moves.
-- [ ] 3.3 Add a typography section to `AGENTS.md` at colour-axis depth: the D2 naming rule ("name by the most stable true property"), the token table, the escape-hatch example, and a note on the two provisional Stage-2 tokens.
+- [~] 3.1 Run V1–V4 and V7: build exit 0 with baseline-matching warning set (only `lila`) — **pass**; `css-identity.mjs` empty diff — **does not pass**, 9 declaration-count differences, all fully explained (see report), none is an actual computed-value regression; all 13 tokens and their generated utilities present in `dist/_astro/*.css` — **pass**; `rg "text-\[clamp|font-size:\s*clamp" src/` hits equal exactly the PR-body deferral manifest — **pass**, 15 residual lines, listed in report.
+- [ ] 3.2 Run V9: manual visual check, 5 widths, against the Phase 0 baseline screenshots — **NOT run by sdd-apply**, no browser tool available in this session. Orchestrator must run this against `openspec/changes/plantillas-multiples/style-baseline.md`'s computed-style hashes.
+- [x] 3.3 Add a typography section to `AGENTS.md` at colour-axis depth: the D2 naming rule ("name by the most stable true property"), the token table, the escape-hatch example, and a note on the two provisional Stage-2 tokens.
+
+## Phase 1b: Typography Stage 2 Merge (PR 1b, branches from PR 1)
+
+Out-of-plan addition, requested directly by the user after PR 1 landed. Mints
+the two tokens PR 1's residual-literal audit surfaced as gaps (`body-lg` for
+the 5-site `clamp(14px,4vw,18px)` cluster, `display` for the deliberately
+off-scale "15" numeral) and applies the Stage 2 merges the user reviewed and
+approved by exact pixel cost. Spacing stays untouched, per instruction.
+
+- [x] 1b.1 Mint `--text-body-lg: clamp(14px, 4vw, 18px)` and `--text-display: clamp(72px, 22vw, 190px)` in the `@theme` block of `src/styles/global.css`, each with a source `file:line` doc comment matching the block's existing style; `--text-display`'s comment records that it deliberately sits outside the scale (merging into `name-lg` would cost 7px mobile / 20px desktop against a prior deliberate design decision). Added both to `TextToken` (`src/types/typography.ts`) and `TITLE_SIZE_CLASS` (`src/lib/typography.ts`).
+- [x] 1b.2 Migrated the 6 exact matches by exact-string search: 5× `clamp(14px,4vw,18px)` → `text-body-lg`/`var(--text-body-lg)` (`details.section.astro:75,76`, `hero.section.astro:60`, `photos.section.astro:54`, `map-modal.component.astro:71`); 1× `clamp(72px,22vw,190px)` → `text-display` (`hero.section.astro:45`).
+- [x] 1b.3 Applied the 6 approved merges (pixel cost within the user's bound — 0px mobile except one +0.04px, up to 2px desktop): `clamp(12px,3.6vw,16px)`×2 → `body` (`calendar.component.astro:60,106`); `clamp(13px,3.6vw,17px)` → `body` (`index.astro:75`); `clamp(13px,3.6vw,18px)` → `body` (`rsvp-button.component.astro:27`); `clamp(11px,3vw,15px)` → `caption` (`countdown.component.astro:30`); `clamp(20px,5.2vw,30px)`×2 → `emphasis` (`hero.section.astro:42,56`); `clamp(14px,4vw,16px)` → `body-lg` (`map-modal.component.astro:53`).
+- [x] 1b.4 Left `clamp(12px,3.2vw,15px)` in `rsvp-button.component.astro:30` as a documented literal (merging into `caption` would cost 1px on mobile, exceeding the approved 0px-mobile bound) — inline comment added explaining why.
+- [x] 1b.5 Updated `AGENTS.md`'s Typography section: added `body-lg`/`display` to the token table, a "Fusiones aplicadas (Stage 2)" table with the 6 merges and their pixel cost, and pointed the escape-hatch section at the one remaining documented one-off.
+- [x] 1b.6 Verify: `pnpm run build` exit 0, only the pre-existing `lila` warning; `rg "text-\[clamp|font-size:\s*clamp" src/` returns exactly 1 line (the documented one-off), down from PR 1's 15; all 15 `--text-*` custom properties and all 15 `.text-*` utility rules present in `dist/_astro/*.css`. `git diff --stat`: 56 insertions + 19 deletions = 75 changed lines, well under the 140-line batch budget. `src/lib/layout.ts` and all spacing literals untouched (confirmed via `git status`/`git diff --stat`).
 
 ## Phase 4: Spacing Tokens & Migration (PR 2, branches from PR 1)
 
@@ -66,4 +81,4 @@ Chain strategy: pending
 
 ## Phase 6: Follow-up (not blocking PR 1 or PR 2)
 
-- [ ] 6.1 Carry forward the open Stage 2 question (does "visually identical" forbid all pixel change, or only visible change?) — both PRs here are Stage 1 only and ship regardless of its answer.
+- [~] 6.1 Carry forward the open Stage 2 question (does "visually identical" forbid all pixel change, or only visible change?) — both PRs here are Stage 1 only and ship regardless of its answer. **Partially resolved by PR 1b**: the user explicitly approved a bounded answer for the 6 merges in Phase 1b (0px mobile, up to 2px desktop) — this does not resolve the general question for remaining candidates such as the `subtitle-alt`/`title-alt` provisional tokens, which still await an explicit Stage 2 decision.
