@@ -38,7 +38,7 @@ const rsvpDeadlineLabel = rsvp.deadline.toLocaleDateString("es-ES", {
 ---
 
 <div
-  class="reveal relative w-full pt-[clamp(44px,13vw,108px)] mb-[clamp(24px,6vw,48px)]"
+  class="reveal relative w-full pt-section-top mb-2xl"
   style={SECTION_VARS_WITH_BLEED}
 >
   <!-- Mariposa junto al galon, en el hueco superior del bloque. -->
@@ -83,6 +83,10 @@ const rsvpDeadlineLabel = rsvp.deadline.toLocaleDateString("es-ES", {
     </Fragment>
 
     <Fragment slot="b">
+      <!-- gap cercano a --spacing-sm (mismo minimo y pendiente, el maximo
+           difiere en solo 2px): se queda fuera de la escala a proposito,
+           candidato a fusion de Stage 2 si se aprueba el mismo margen que la
+           tipografia. -->
       <div class="flex flex-wrap items-center justify-center gap-[clamp(8px,2.5vw,14px)]">
         <!-- Las dos prendas se superponen con posicion absoluta; el contenedor
              calcula su tamano desde las tres variables para que el solape y la

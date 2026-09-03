@@ -147,7 +147,7 @@ constants — consistent with the convention's intent.
 
 ### How a component consumes a token
 
-- Tailwind 4 generates `text-body`, `p-lg`, `gap-xs` from `--text-*` / `--spacing-*` in
+- Tailwind 4 generates `text-body`, `p-lg`, `py-xs` from `--text-*` / `--spacing-*` in
   `@theme` — the same mechanism already proven in-repo for `--color-*` and `--font-*`.
 - Scoped `<style>` blocks use `var(--text-body)` directly.
 - `style` attributes import the named constants from `src/lib/layout.ts`, as today.

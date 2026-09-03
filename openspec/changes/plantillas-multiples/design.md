@@ -31,7 +31,7 @@ minted token must have at least one call site in the same PR**. No aspirational 
 
 **Push-back on the proposal.** All three named constants (`SECTION_GUTTER` ×5,
 `SECTION_TOP`, `HERO_TOP`) are consumed today as Tailwind utility classes
-(`px-[clamp(16px,6vw,58px)]`, `pt-[…]`), not as `style` attributes. `layout.ts` exists for
+(`px-[ clamp(16px, 6vw, 58px) ]`, `pt-[ … ]`), not as `style` attributes. `layout.ts` exists for
 values composed inside `calc()` in TypeScript template literals (`OUT`, `OUT_TOP`) — a job
 `@theme` cannot do. Routing class-consumed values through `layout.ts` would force a
 mechanism change from class to inline style, which raises specificity and loses responsive
@@ -185,7 +185,7 @@ src/styles/global.css  @theme
       │  Tailwind generates          │  Tailwind generates
       │  .text-body{font-size:var(--text-body)}
       │                              │  .p-lg{padding:var(--spacing-lg)}
-      │                              ├──> class="p-lg gap-xs px-section-gutter"
+      │                              ├──> class="p-lg py-xs px-section-gutter"
       │                              └──> var(--spacing-lg) inside scoped <style>
       │
       └──> src/types/typography.ts   TextToken
@@ -292,7 +292,7 @@ at all five widths.
 | V2 | Warning set | build console output | exactly one warning — the `lila` on-accent 3.28:1 line; string-compare against baseline |
 | V3 | Declaration identity | `node scripts/css-identity.mjs $env:TEMP\vi-baseline-dist dist` | **empty diff** (Stage 1); Stage 2 diff must equal the approved merge table line for line |
 | V4 | Token emission | search `dist/_astro/*.css` for each minted token name | all present. A missing token means a dead token *or* a missed migration — investigate, never ignore |
-| V5 | Utility generation | search `dist/_astro/*.css` for `.text-title{`, `.p-lg{`, `.px-section-gutter{`, `.p-2xl{` | present. `2xl`/`3xs` keys are unproven — the probe used `testkey`; V5 is where a parse failure surfaces |
+| V5 | Utility generation | search `dist/_astro/*.css` for `.text-title{`, `.p-lg{`, `.px-section-gutter{`, `.mb-2xl{` | present. `2xl`/`3xs` keys are unproven — the probe used `testkey`; V5 is where a parse failure surfaces |
 | V6 | Class-name scanning | V5 covers it | confirms Tailwind's content scanner found the literal strings inside `src/lib/typography.ts` |
 | V7 | Residual font literals | `rg "text-\[clamp\|font-size:\s*clamp" src/` | hit set **exactly equals** the PR-body deferral manifest |
 | V8 | Residual spacing literals | `rg "(gap\|p[xytblr]?\|m[xytblr]?)-\[clamp" src/` | hit set **exactly equals** the manifest plus Q1/Q2 exclusions |
