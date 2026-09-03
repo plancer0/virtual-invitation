@@ -72,6 +72,14 @@
   --text-name: clamp(48px, 16vw, 128px);
   /** Nombre de la quinceañera en portada. Fuente: index.astro:28 */
   --text-name-lg: clamp(64px, 20vw, 170px);
+  /** Texto corrido largo, un escalon sobre `body`. Fuente: details.section.astro:75, hero.section.astro:60, photos.section.astro:54 */
+  --text-body-lg: clamp(14px, 4vw, 18px);
+  /** Numero destacado de portada (el "15"). Fuera de la escala a proposito:
+      el tamano 190px en desktop fue una decision de diseno deliberada, y
+      fusionarlo con `name-lg` costaria 7px en mobile y 20px en desktop —
+      un sistema de tokens que pisa una decision de diseno tomada esta roto.
+      Fuente: hero.section.astro:45 */
+  --text-display: clamp(72px, 22vw, 190px);
 }
 
 /* Las decoraciones se salen del marco y de la pantalla a proposito. `clip`

@@ -32,6 +32,29 @@ tests nothing new. `/invitacion` still differs between the two, so both are
 kept there. This is the measured form of the design's D6 observation that 360
 and 390 are the load-bearing widths.
 
+## After Stage 2 (typography merges applied)
+
+The merges approved by the user deliberately move pixels on desktop, so these
+supersede the table above as the current reference. Mobile was the constraint
+and it held.
+
+| Page | 360 | 390 | 768 | 1024 | 1440 |
+|---|---|---|---|---|---|
+| `/` | `e1f42d60` | `df64a0c4` | `28f1a627` | `9006d054` | `9006d054` |
+| `/invitacion` | `19d3f78e` | `925837f8` | `acdc0269` | `fce72fa6` | `4573e9d7` |
+
+The cover page is **unchanged at 360 and 390** — identical hashes, not merely
+similar. Every element on the invitation was diffed against the baseline at
+both mobile widths, and only these moved:
+
+| Width | Elements | Change | Cause |
+|---|---|---|---|
+| 360 | 35 | `12.96px` to `13px` (+0.04px) | calendar day numerals folded into `--text-body` |
+| 390 | 2 | `20.28px` to `20px` (-0.28px) | the 5.2vw value folded into `--text-emphasis` |
+
+Both were predicted arithmetically before the work and disclosed. 0.04px is a
+fraction of a device pixel. Nothing else moved on either mobile width.
+
 ## How to re-measure
 
 Serve the build (`pnpm run preview`), then run this in the page console at each

@@ -19,4 +19,6 @@ export const TITLE_SIZE_CLASS: Record<TitleSize, string> = {
   heading: "text-heading",
   name: "text-name",
   "name-lg": "text-name-lg",
+  "body-lg": "text-body-lg",
+  display: "text-display",
 };

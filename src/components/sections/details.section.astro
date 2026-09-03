@@ -72,8 +72,8 @@ const rsvpDeadlineLabel = rsvp.deadline.toLocaleDateString("es-ES", {
   <InfoCube class="relative">
     <Fragment slot="a">
       <Title size="emphasis">Recepción</Title>
-      <p class="font-baskervville text-ink text-[clamp(14px,4vw,18px)]">{time}</p>
-      <p class="font-baskervville text-ink text-[clamp(14px,4vw,18px)]">{venue.name}</p>
+      <p class="font-baskervville text-ink text-body-lg">{time}</p>
+      <p class="font-baskervville text-ink text-body-lg">{venue.name}</p>
       <MapModal
         googleMapsUrl={venue.googleMapsUrl}
         appleMapsUrl={venue.appleMapsUrl}

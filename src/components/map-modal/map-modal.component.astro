@@ -50,7 +50,7 @@ const { googleMapsUrl, appleMapsUrl, wazeUrl, uberUrl } = Astro.props;
     <button
       id="map-modal-close"
       type="button"
-      class="text-ink underline text-[clamp(14px,4vw,16px)] font-baskervville mt-1"
+      class="text-ink underline text-body-lg font-baskervville mt-1"
     >
       Cerrar
     </button>
@@ -68,7 +68,7 @@ const { googleMapsUrl, appleMapsUrl, wazeUrl, uberUrl } = Astro.props;
     border: 1px solid var(--color-detail);
     color: var(--color-ink);
     font-family: var(--font-baskervville);
-    font-size: clamp(14px, 4vw, 18px);
+    font-size: var(--text-body-lg);
     text-decoration: none;
     transition:
       background-color 0.2s ease,

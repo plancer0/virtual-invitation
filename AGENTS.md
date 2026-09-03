@@ -72,10 +72,10 @@ no `--color-purple`), aplicada a un eje distinto.
 
 ### Como funciona
 
-- `src/styles/global.css` — el bloque `@theme` define los 13 tokens
+- `src/styles/global.css` — el bloque `@theme` define los 15 tokens
   `--text-*` y genera las utilidades correspondientes (`text-body`,
   `text-title`...).
-- `src/types/typography.ts` — `TextToken` es la union cerrada con los 13
+- `src/types/typography.ts` — `TextToken` es la union cerrada con los 15
   nombres; `TitleSize` la reexporta para `Title`.
 - `src/lib/typography.ts` — `TITLE_SIZE_CLASS` traduce cada token a su clase
   de Tailwind. Mismo patron que `src/lib/palette.ts`.
@@ -99,6 +99,8 @@ no `--color-purple`), aplicada a un eje distinto.
 | `heading` | `clamp(40px, 11vw, 88px)` | Titulo de cierre |
 | `name` | `clamp(48px, 16vw, 128px)` | Nombre en una seccion interior |
 | `name-lg` | `clamp(64px, 20vw, 170px)` | Nombre de portada |
+| `body-lg` | `clamp(14px, 4vw, 18px)` | Texto corrido largo, un escalon sobre `body` |
+| `display` | `clamp(72px, 22vw, 190px)` | El "15" de portada — fuera de la escala a proposito |
 
 ### Los dos tokens `-alt`
 
@@ -118,10 +120,31 @@ cuando de verdad es un caso unico (una decoracion, un ajuste optico puntual),
 siempre que lleve al lado un comentario explicando por que ningun token
 encaja. Un valor arbitrario sin ese comentario no pasa revision.
 
-Ahora mismo el repositorio tiene bastantes de estos sin ese comentario
+El unico caso vigente hoy: `rsvp-button.component.astro`, la variante
+embebida del boton, usa `clamp(12px, 3.2vw, 15px)` como literal comentado.
+Fusionarlo con `caption` costaria 1px a 360px, fuera del rango que aprobo el
+usuario para esta ronda (0px en mobile, hasta 2px en desktop), asi que se
+queda fuera de la escala a proposito en vez de forzar una fusion que rompe
+esa cota.
+
+### Fusiones aplicadas (Stage 2)
+
+Estas fusiones cambian pixeles a proposito, dentro del rango que aprobo el
+usuario (0px en mobile salvo una excepcion de +0.04px, hasta 2px en desktop):
+
+| Literal fusionado | Token destino | Costo mobile | Costo desktop |
+|---|---|---|---|
+| `clamp(12px, 3.6vw, 16px)` (x2) | `body` | +0.04px | 0px |
+| `clamp(13px, 3.6vw, 17px)` | `body` | 0px | -1px |
+| `clamp(13px, 3.6vw, 18px)` | `body` | 0px | -2px |
+| `clamp(11px, 3vw, 15px)` | `caption` | 0px | -1px |
+| `clamp(20px, 5.2vw, 30px)` (x2) | `emphasis` | 0px / -0.3px | -2px |
+| `clamp(14px, 4vw, 16px)` | `body-lg` | 0px | +2px |
+
+Ahora mismo el repositorio tiene otros literales sin ese comentario
 todavia: son residuo de Stage 1, que solo tokeniza por coincidencia exacta de
 valor (nunca por parecido, para que un error de sustitucion sea estructuralmente
-imposible). Un valor que no coincide con ninguno de los 13 tokens se queda
+imposible). Un valor que no coincide con ninguno de los 15 tokens se queda
 como literal a proposito, a la espera de Stage 2 o de un comentario que lo
 justifique como caso unico permanente.
 

@@ -21,7 +21,9 @@ export type TextToken =
   | "title-lg"
   | "heading"
   | "name"
-  | "name-lg";
+  | "name-lg"
+  | "body-lg"
+  | "display";
 
 /**
  * `Title` acepta cualquier token, no solo los que usa hoy: ya se usa para
