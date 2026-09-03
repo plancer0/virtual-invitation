@@ -23,11 +23,17 @@ const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(mess
   rel="noopener noreferrer"
   class:list={[
     fixed
-      ? // Flotante: tiene todo el ancho de pantalla, cabe en una linea.
-        "fixed z-40 left-1/2 -translate-x-1/2 bottom-[calc(clamp(12px,4vw,24px)+env(safe-area-inset-bottom))] whitespace-nowrap px-[clamp(22px,6vw,32px)] py-[clamp(12px,3vw,16px)] text-[clamp(13px,3.6vw,18px)]"
+      ? // Flotante: tiene todo el ancho de pantalla, cabe en una linea. El
+        // padding horizontal no usa --spacing-xl a proposito: difiere solo
+        // 0.4px a 360px de clamp(20px, 6vw, 32px) — demasiado cerca para ser
+        // casualidad, pero fuera de la tolerancia de coincidencia exacta de
+        // Stage 1.
+        "fixed z-40 left-1/2 -translate-x-1/2 bottom-[calc(clamp(12px,4vw,24px)+env(safe-area-inset-bottom))] whitespace-nowrap px-[clamp(22px,6vw,32px)] py-[clamp(12px,3vw,16px)] text-body"
       : // Embebido: vive en una celda del cubo (99px de ancho util en movil),
         // asi que debe poder partir el texto y no exceder a su contenedor.
-        "max-w-full px-[clamp(12px,4vw,20px)] py-[clamp(8px,2.4vw,12px)] text-[clamp(12px,3.2vw,15px)] text-center leading-tight",
+        // El tamano de texto se queda como literal a proposito: fusionarlo
+        // con `caption` costaria 1px en mobile, fuera del rango aprobado.
+        "max-w-full px-md py-xs text-[clamp(12px,3.2vw,15px)] text-center leading-tight",
     "inline-flex items-center justify-center bg-accent text-on-accent rounded-full shadow-lg font-baskervville tracking-wide hover:opacity-90 transition-opacity",
     className,
   ]}

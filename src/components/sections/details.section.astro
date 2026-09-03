@@ -38,7 +38,7 @@ const rsvpDeadlineLabel = rsvp.deadline.toLocaleDateString("es-ES", {
 ---
 
 <div
-  class="reveal relative w-full pt-[clamp(44px,13vw,108px)] mb-[clamp(24px,6vw,48px)]"
+  class="reveal relative w-full pt-section-top mb-2xl"
   style={SECTION_VARS_WITH_BLEED}
 >
   <!-- Mariposa junto al galon, en el hueco superior del bloque. -->
@@ -71,9 +71,9 @@ const rsvpDeadlineLabel = rsvp.deadline.toLocaleDateString("es-ES", {
   />
   <InfoCube class="relative">
     <Fragment slot="a">
-      <Title fontSize="clamp(20px, 5vw, 28px)">Recepción</Title>
-      <p class="font-baskervville text-ink text-[clamp(14px,4vw,18px)]">{time}</p>
-      <p class="font-baskervville text-ink text-[clamp(14px,4vw,18px)]">{venue.name}</p>
+      <Title size="emphasis">Recepción</Title>
+      <p class="font-baskervville text-ink text-body-lg">{time}</p>
+      <p class="font-baskervville text-ink text-body-lg">{venue.name}</p>
       <MapModal
         googleMapsUrl={venue.googleMapsUrl}
         appleMapsUrl={venue.appleMapsUrl}
@@ -83,6 +83,10 @@ const rsvpDeadlineLabel = rsvp.deadline.toLocaleDateString("es-ES", {
     </Fragment>
 
     <Fragment slot="b">
+      <!-- gap cercano a --spacing-sm (mismo minimo y pendiente, el maximo
+           difiere en solo 2px): se queda fuera de la escala a proposito,
+           candidato a fusion de Stage 2 si se aprueba el mismo margen que la
+           tipografia. -->
       <div class="flex flex-wrap items-center justify-center gap-[clamp(8px,2.5vw,14px)]">
         <!-- Las dos prendas se superponen con posicion absoluta; el contenedor
              calcula su tamano desde las tres variables para que el solape y la
@@ -107,8 +111,8 @@ const rsvpDeadlineLabel = rsvp.deadline.toLocaleDateString("es-ES", {
           />
         </div>
         <div class="flex flex-col items-center gap-1 flex-1 min-w-[105px]">
-          <Title fontSize="clamp(18px, 4.6vw, 24px)">{dressCode.type}</Title>
-          <p class="font-baskervville text-ink text-[clamp(13px,3.6vw,16px)]">
+          <Title size="subtitle-alt">{dressCode.type}</Title>
+          <p class="font-baskervville text-ink text-body">
             Colores reservados: {
               dressCode.reservedColors.map((color, i) => (
                 <>
@@ -125,16 +129,16 @@ const rsvpDeadlineLabel = rsvp.deadline.toLocaleDateString("es-ES", {
     </Fragment>
 
     <Fragment slot="c">
-      <Title fontSize="clamp(20px, 5vw, 28px)">Confirmación de asistencia</Title>
-      <p class="font-baskervville text-ink text-[clamp(13px,3.6vw,16px)]">
+      <Title size="emphasis">Confirmación de asistencia</Title>
+      <p class="font-baskervville text-ink text-body">
         Por favor confirma tu asistencia antes del {rsvpDeadlineLabel}.
       </p>
       <RsvpButton phoneNumber={rsvp.phoneNumber} fixed={false} class="mt-1" />
     </Fragment>
 
     <Fragment slot="d">
-      <Title fontSize="clamp(20px, 5vw, 28px)">Sugerencia de regalo</Title>
-      <p class="font-baskervville text-ink text-[clamp(13px,3.6vw,16px)]">{giftText}</p>
+      <Title size="emphasis">Sugerencia de regalo</Title>
+      <p class="font-baskervville text-ink text-body">{giftText}</p>
       <GiftIcons class="mt-1" />
     </Fragment>
   </InfoCube>

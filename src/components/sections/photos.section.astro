@@ -16,7 +16,7 @@ const { name, caption, photos } = Astro.props;
 ---
 
 <div
-  class="reveal relative flex w-full flex-col items-center gap-6 px-[clamp(16px,6vw,58px)]"
+  class="reveal relative flex w-full flex-col items-center gap-6 px-section-gutter"
   style={SECTION_VARS}
 >
   <!-- Mariposa asomando por la derecha, sobre el nombre. -->
@@ -43,7 +43,7 @@ const { name, caption, photos } = Astro.props;
     <SideDecor flip class="block w-full h-auto" />
   </div>
   <Title
-    fontSize="clamp(48px, 16vw, 128px)"
+    size="name"
     fontFamily="var(--font-meaculpa)"
     color="var(--color-ink)"
     class="relative"
@@ -51,7 +51,7 @@ const { name, caption, photos } = Astro.props;
     {name}
   </Title>
   <PolaroidPair photos={photos} class="relative w-full" />
-  <p class="relative font-baskervville text-ink text-[clamp(14px,4vw,18px)] text-center max-w-[46ch]">
+  <p class="relative font-baskervville text-ink text-body-lg text-center max-w-[46ch]">
     {caption}
   </p>
 </div>
