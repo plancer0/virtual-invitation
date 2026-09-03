@@ -16,7 +16,7 @@ const { intro } = Astro.props;
 ---
 
 <div
-  class="reveal relative flex w-full flex-col items-center gap-3 px-[clamp(16px,6vw,58px)]"
+  class="reveal relative flex w-full flex-col items-center gap-3 px-section-gutter"
   style={HERO_VARS}
 >
   <!-- Rosas en las esquinas superiores. El desplazamiento vertical suma el
@@ -36,8 +36,11 @@ const { intro } = Astro.props;
   </div>
   <Title
     size="title-alt"
-    class="relative flex items-stretch justify-center gap-[clamp(8px,2.5vw,16px)] pt-[clamp(62px,17.5vw,90px)]"
+    class="relative flex items-stretch justify-center gap-sm pt-hero-top"
   >
+    <!-- El "Mis" sube con un margen propio para alinear su base optica con
+         el "15" mucho mas grande a su lado; es un ajuste puntual de esta
+         composicion, no una separacion de la escala. -->
     <span
       class="flex items-start leading-none font-meaculpa text-emphasis mt-[clamp(18px,5.5vw,35px)]"
       >Mis</span
@@ -53,7 +56,7 @@ const { intro } = Astro.props;
       15
     </span>
     <span
-      class="flex items-end font-meaculpa leading-none text-emphasis mb-[clamp(5px,1.6vw,10px)]"
+      class="flex items-end font-meaculpa leading-none text-emphasis mb-2xs"
       >años</span
     >
   </Title>

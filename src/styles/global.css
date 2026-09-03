@@ -80,6 +80,48 @@
       un sistema de tokens que pisa una decision de diseno tomada esta roto.
       Fuente: hero.section.astro:45 */
   --text-display: clamp(72px, 22vw, 190px);
+
+  /* ---- Espaciado ----
+     Los 8 escalones ordinales se nombran por rango de magnitud (3xs...2xl),
+     no por su valor en pixeles: es la misma logica que la tipografia por rol,
+     aplicada a un eje donde no hay un nombre funcional natural para cada
+     paso. Las 3 constantes de seccion SI llevan nombre por funcion porque no
+     son un paso de una escala: cubren un uso concreto (separacion lateral de
+     seccion, techo de la tarjeta de detalles, techo del hero) con un valor
+     que no se repite en ningun otro contexto.
+
+     A diferencia de la tipografia, el espaciado de este proyecto es
+     mayormente a medida: de 24 valores `clamp()` distintos medidos en
+     src/, solo estos 11 coinciden exacto en 2+ sitios o encajan en una
+     escala compartida. El resto (~13 valores, cada uno usado una sola vez)
+     se queda como literal a proposito — forzarlos habria movido algun
+     call site hasta 74px en mobile. Ver AGENTS.md para el detalle y la
+     regla de exclusion por geometria (`width`/`height`/posicion). */
+
+  /** Fuente: calendar.component.astro:33 */
+  --spacing-3xs: clamp(4px, 1.5vw, 8px);
+  /** Fuente: hero.section.astro:56 */
+  --spacing-2xs: clamp(5px, 1.6vw, 10px);
+  /** Fuente: map-modal.component.astro:17 */
+  --spacing-xs: clamp(8px, 2.4vw, 12px);
+  /** Fuente: hero.section.astro:39 */
+  --spacing-sm: clamp(8px, 2.5vw, 16px);
+  /** Fuente: rsvp-button.component.astro:32 */
+  --spacing-md: clamp(12px, 4vw, 20px);
+  /** Fuente: info-cube.component.astro:15 */
+  --spacing-lg: clamp(14px, 5vw, 28px);
+  /** Fuente: map-modal.component.astro:29 */
+  --spacing-xl: clamp(20px, 6vw, 32px);
+  /** Fuente: details.section.astro:41 */
+  --spacing-2xl: clamp(24px, 6vw, 48px);
+
+  /** Separacion lateral de una seccion contra el marco (5 sitios).
+      Fuente: closing.section.astro:14 */
+  --spacing-section-gutter: clamp(16px, 6vw, 58px);
+  /** Techo de la tarjeta de detalles. Fuente: details.section.astro:41 */
+  --spacing-section-top: clamp(44px, 13vw, 108px);
+  /** Techo del bloque de titulo en portada. Fuente: hero.section.astro:39 */
+  --spacing-hero-top: clamp(62px, 17.5vw, 90px);
 }
 
 /* Las decoraciones se salen del marco y de la pantalla a proposito. `clip`

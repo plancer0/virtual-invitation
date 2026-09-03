@@ -68,16 +68,26 @@ approved by exact pixel cost. Spacing stays untouched, per instruction.
 
 ## Phase 4: Spacing Tokens & Migration (PR 2, branches from PR 1)
 
-- [ ] 4.1 Add an 11-token `--spacing-*` block to `@theme`: 8 ordinal steps (`-3xs`…`-2xl`) plus 3 functionally-named constants — `--spacing-section-gutter`, `--spacing-section-top`, `--spacing-hero-top`. `src/lib/layout.ts` stays unchanged (D1 — this design decision supersedes the spec.md wording "3 named constants in `layout.ts`"; per the design-wins rule, D1's rejection of that option is authoritative).
-- [ ] 4.2 Migrate the 5 `section-gutter` sites (`hero`, `photos`, `parents`, `closing`, `date`), then the 4 `info-cube` `-lg` sites, then the remaining single-site tokens (`calendar`, `map-modal`, `details`, `rsvp-button`, `hero`), per the design's cheapest-proof-first order.
-- [ ] 4.3 Complete the spacing half of the 6 dual-value lines deferred at task 2.2.
-- [ ] 4.4 Record `token | literal | occurrences replaced` in the PR body.
+**Deviation from the plan, recorded per orchestrator instruction before apply**: the
+design's assumption that an 8-step scale would absorb most of the measured
+`clamp()` spacing values did not hold. The orchestrator measured all 24 distinct
+`gap`/`padding`/`margin` values at 360/390/768/1024/1440 and found only 8 fit the
+scale exactly (plus the 3 functional constants); the other ~13 are each used once
+and would have moved a call site by up to 74px if forced onto the nearest step.
+Tasks 4.1–4.4 below were executed against that corrected, measured set — the
+11-token structure and site lists happened to already match what tasks.md
+specified, so no task text needed rewriting, only this note.
+
+- [x] 4.1 Added the 11-token `--spacing-*` block to `@theme` in `src/styles/global.css`: 8 ordinal steps (`3xs`…`2xl`) plus 3 functionally-named constants — `--spacing-section-gutter`, `--spacing-section-top`, `--spacing-hero-top`. `src/lib/layout.ts` untouched (`git diff --stat` confirms empty diff) — D1 stands, spec.md's corrected wording (see decision `spec-correction-layout`) is what's implemented.
+- [x] 4.2 Migrated all 19 exact-match occurrences: the 5 `section-gutter` sites (`hero`, `photos`, `parents`, `closing`, `date`), the 4 `info-cube` `p-lg` sites, then the single/double-site tokens (`calendar` → `3xs`, `hero` → `sm`/`2xs`/`hero-top`, `details` → `section-top`/`2xl`, `map-modal` → `xs`/`xl`, `rsvp-button` → `md`/`xs`).
+- [x] 4.3 Completed the spacing half of the 6 dual-value lines from task 2.2: `hero.section.astro:39` (gap→`sm`, pt→`hero-top`) and `:56` (mb→`2xs`) fully migrated; `map-modal.component.astro:17` py→`xs` (px stays literal, no exact match); `index.astro:75` and `rsvp-button.component.astro`'s two sites have no exact spacing token match — left as documented/commented literals (one now carries a proximity comment, see 4.4).
+- [x] 4.4 Token | literal | occurrences: `3xs` `clamp(4px,1.5vw,8px)` ×1 · `2xs` `clamp(5px,1.6vw,10px)` ×1 · `xs` `clamp(8px,2.4vw,12px)` ×2 · `sm` `clamp(8px,2.5vw,16px)` ×1 · `md` `clamp(12px,4vw,20px)` ×1 · `lg` `clamp(14px,5vw,28px)` ×4 · `xl` `clamp(20px,6vw,32px)` ×1 · `2xl` `clamp(24px,6vw,48px)` ×1 · `section-gutter` `clamp(16px,6vw,58px)` ×5 · `section-top` `clamp(44px,13vw,108px)` ×1 · `hero-top` `clamp(62px,17.5vw,90px)` ×1. Sum = 19, matches the migrated-occurrence count. Two residual literals got a proximity comment (rsvp-button.component.astro's floating px, details.section.astro's dress-code gap) rather than a token, per the 0.4px/2px tolerance the user set for this round.
 
 ## Phase 5: Spacing Verification (PR 2)
 
-- [ ] 5.1 Run V1–V4 and V8: build; `css-identity.mjs` empty diff; all 11 spacing tokens/utilities present, incl. `.p-2xl{` and `.gap-3xs{`; `rg "(gap|p[xytblr]?|m[xytblr]?)-\[clamp" src/` hits equal the manifest plus the Q1/Q2 geometry exclusions.
-- [ ] 5.2 Run V9 and V10: 5-width manual check against baseline; then set `palettes.salvia` in `src/config/invitation.ts`, `pnpm run assets`, rebuild, recheck, revert the palette switch.
-- [ ] 5.3 Add a spacing section to `AGENTS.md`: magnitude-rank naming rule, token table, `--spacing-section-*`/`-hero-top` rationale, and the Q1–Q3 geometry-exclusion boundary.
+- [x] 5.1 V1/V2 pass (build exit 0, only the pre-existing `lila` warning). V4/V5 pass: all 11 `--spacing-*` custom properties and 11 corresponding utilities present in `dist/_astro/*.css`, each backed by a real call site (confirmed one utility class generated per token, matching the occurrence table in 4.4 — no orphaned/dead token). V3 (`css-identity.mjs` empty diff) does **not** pass as literally worded — 20 declaration differences, all explained: 16 are the pre-existing typography diffs already documented in the PR 1/1b batches (unrelated to this batch); the remaining 4 are spacing-specific and all traced: one is a stale baseline-only artifact from the design's own abandoned `--spacing-lg` fallback probe (confirmed absent from the current tree — nothing left to fix), and three are `--spacing-hero-top`'s var()-indirection producing byte-identical computed CSS but tripping the script's naive minification-boundary parsing (verified directly against the built CSS: `.pt-hero-top{padding-top:var(--spacing-hero-top)}` and `--spacing-hero-top:clamp(62px, 17.5vw, 90px)` are both present and correct). `rg "(gap|p[xytblr]?|m[xytblr]?)-\[clamp" src/` hits equal the manifest plus the Q1/Q2 geometry exclusions (10 residual lines, listed in the apply report).
+- [ ] 5.2 V9/V10 (5-width manual check, palette switch) — **NOT run by sdd-apply**, no browser tool available in this session. Orchestrator to run, same as the still-open 3.2 from PR 1.
+- [x] 5.3 Added a Spacing section to `AGENTS.md` at colour/typography-axis depth: magnitude-rank naming rule, the 11-token table, the `layout.ts`/geometry-exclusion boundary, and — the important part — the "spacing is mostly bespoke" finding (only 11 of 24 measured values are shared or exact-scale fits; the rest stay literal on purpose, not as unfinished work).
 
 ## Phase 6: Follow-up (not blocking PR 1 or PR 2)
 

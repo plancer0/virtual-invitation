@@ -50,8 +50,8 @@ section constants, all in `@theme`, each equal to an existing literal.
 `src/lib/layout.ts` MUST NOT be modified by this change. An earlier draft placed
 the three section constants there, following the `FRAME_PADDING` pattern. That
 was rejected in design decision D1 on evidence: all seven call sites consume
-these values as Tailwind utility classes (`px-[clamp(16px,6vw,58px)]`,
-`pt-[…]`), never as `style` attributes. Routing them through `layout.ts` would
+these values as Tailwind utility classes (`px-[ clamp(16px, 6vw, 58px) ]`,
+`pt-[ … ]`), never as `style` attributes. Routing them through `layout.ts` would
 force a class-to-inline-style mechanism change, raising specificity and losing
 responsive variants, for no benefit. `layout.ts` exists for values composed
 inside `calc()` in TypeScript template literals — a job `@theme` cannot do.

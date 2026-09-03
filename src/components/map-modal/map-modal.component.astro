@@ -14,7 +14,7 @@ const { googleMapsUrl, appleMapsUrl, wazeUrl, uberUrl } = Astro.props;
   type="button"
   aria-haspopup="dialog"
   aria-expanded="false"
-  class="inline-flex items-center justify-center whitespace-nowrap bg-accent text-on-accent px-[clamp(16px,5vw,24px)] py-[clamp(8px,2.4vw,12px)] rounded-full shadow-lg font-baskervville text-body tracking-wide hover:opacity-90 transition-opacity"
+  class="inline-flex items-center justify-center whitespace-nowrap bg-accent text-on-accent px-[clamp(16px,5vw,24px)] py-xs rounded-full shadow-lg font-baskervville text-body tracking-wide hover:opacity-90 transition-opacity"
 >
   Cómo llegar
 </button>
@@ -26,7 +26,7 @@ const { googleMapsUrl, appleMapsUrl, wazeUrl, uberUrl } = Astro.props;
 >
   <div
     id="map-modal-panel"
-    class="w-full max-w-[360px] rounded-[24px] border border-detail bg-base p-[clamp(20px,6vw,32px)] flex flex-col gap-4 items-center"
+    class="w-full max-w-[360px] rounded-[24px] border border-detail bg-base p-xl flex flex-col gap-4 items-center"
     role="dialog"
     aria-modal="true"
     aria-labelledby="map-modal-title"
