@@ -1,9 +1,9 @@
 ---
 import { Image } from "astro:assets";
-import BaseLayout from "../layouts/base.layout.astro";
-import Title from "../components/Title/title.component.astro";
+import BaseLayout from "@invitacion/ui/layouts/base.layout.astro";
+import Title from "@invitacion/ui/components/Title/title.component.astro";
 import { invitation } from "../config/invitation";
-import { asset } from "../lib/assets";
+import { asset } from "@invitacion/ui/lib/assets.ts";
 
 const carta = asset("carta");
 const mariposa = asset("mariposas-silueta");

@@ -1,5 +1,5 @@
-import type { InvitationConfig } from "../types/invitation";
-import { palettes } from "./palettes";
+import type { InvitationConfig } from "@invitacion/ui/types/invitation.ts";
+import { palettes } from "@invitacion/ui/palettes.ts";
 import { DISPLAY_DATE, EVENT_LOCATION } from "../lib/event";
 import foto1 from "../Images/1.jpeg";
 import foto2 from "../Images/2.jpeg";

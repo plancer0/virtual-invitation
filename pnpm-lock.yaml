@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@invitacion/ui':
+        specifier: workspace:*
+        version: link:packages/invitacion-ui
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.2.1(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
@@ -33,6 +36,12 @@ importers:
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
+
+  packages/invitacion-ui:
+    dependencies:
+      sharp:
+        specifier: ^0.35.3
+        version: 0.35.3
 
 packages:
 

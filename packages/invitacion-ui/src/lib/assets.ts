@@ -3,8 +3,8 @@ import type { ImageMetadata } from "astro";
 /**
  * Decoraciones en el color de la paleta activa.
  *
- * Todas salen de src/Images/theme/, que genera `pnpm run assets` a partir de
- * los originales morados de src/Images/. Aqui no se importa ningun original:
+ * Todas salen de src/images/theme/, que genera `pnpm run assets` a partir de
+ * los originales morados de src/images/. Aqui no se importa ningun original:
  * las importaciones estaticas se empaquetan aunque no se usen, y tener los dos
  * juegos metia 1 MB de decoraciones moradas en un sitio que ya no es morado.
  *
@@ -12,7 +12,7 @@ import type { ImageMetadata } from "astro";
  * recien clonada tampoco falta.
  */
 const TEMA = import.meta.glob<{ default: ImageMetadata }>(
-  "../Images/theme/*.{webp,svg,png}",
+  "../images/theme/*.{webp,svg,png}",
   { eager: true },
 );
 
@@ -32,7 +32,7 @@ export function asset(nombre: AssetName): ImageMetadata {
   const encontrado = PORNOMBRE.get(nombre);
   if (!encontrado) {
     throw new Error(
-      `Falta la decoracion "${nombre}" en src/Images/theme/. Ejecuta: pnpm run assets`,
+      `Falta la decoracion "${nombre}" en src/images/theme/. Ejecuta: pnpm run assets`,
     );
   }
   return encontrado;

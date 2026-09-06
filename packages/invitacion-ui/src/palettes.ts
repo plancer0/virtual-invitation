@@ -1,4 +1,4 @@
-import type { Palette } from "../types/palette";
+import type { Palette } from "./types/palette";
 
 /**
  * Paletas listas para usar. Una invitacion elige una en `config/invitation.ts`,

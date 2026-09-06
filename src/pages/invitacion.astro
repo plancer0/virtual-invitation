@@ -1,18 +1,18 @@
 ---
-import BaseLayout from "../layouts/base.layout.astro";
-import Frame from "../components/frame/frame.component.astro";
-import MusicPlayer from "../components/music-player/music-player.component.astro";
-import RevealOnScroll from "../components/reveal-on-scroll/reveal-on-scroll.component.astro";
-import TransitionAnchor from "../components/transition-anchor/transition-anchor.component.astro";
-import HeroSection from "../components/sections/hero.section.astro";
-import PhotosSection from "../components/sections/photos.section.astro";
-import ParentsSection from "../components/sections/parents.section.astro";
-import DateSection from "../components/sections/date.section.astro";
-import DetailsSection from "../components/sections/details.section.astro";
-import ClosingSection from "../components/sections/closing.section.astro";
+import BaseLayout from "@invitacion/ui/layouts/base.layout.astro";
+import Frame from "@invitacion/ui/components/frame/frame.component.astro";
+import MusicPlayer from "@invitacion/ui/components/music-player/music-player.component.astro";
+import RevealOnScroll from "@invitacion/ui/components/reveal-on-scroll/reveal-on-scroll.component.astro";
+import TransitionAnchor from "@invitacion/ui/components/transition-anchor/transition-anchor.component.astro";
+import HeroSection from "@invitacion/ui/components/sections/hero.section.astro";
+import PhotosSection from "@invitacion/ui/components/sections/photos.section.astro";
+import ParentsSection from "@invitacion/ui/components/sections/parents.section.astro";
+import DateSection from "@invitacion/ui/components/sections/date.section.astro";
+import DetailsSection from "@invitacion/ui/components/sections/details.section.astro";
+import ClosingSection from "@invitacion/ui/components/sections/closing.section.astro";
 import { invitation } from "../config/invitation";
 import { GOOGLE_CALENDAR_URL } from "../lib/event";
-import { FRAME_PADDING, FRAME_WIDTH } from "../lib/layout";
+import { FRAME_PADDING, FRAME_WIDTH } from "@invitacion/ui/lib/layout.ts";
 ---
 
 <BaseLayout palette={invitation.palette} title={`Invitacion de ${invitation.name}`}>

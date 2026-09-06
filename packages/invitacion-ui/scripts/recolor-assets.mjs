@@ -1,27 +1,33 @@
 /**
  * Repinta las decoraciones en la paleta de la invitacion.
  *
- *   pnpm run assets            # usa la paleta de config/invitation.ts
- *   pnpm run assets -- azul    # fuerza otra paleta
+ *   pnpm run assets                                   # usa la paleta del --config configurado
+ *   pnpm run assets -- azul                           # fuerza otra paleta
+ *   node recolor-assets.mjs --config <ruta-config>     # dice donde vive la config del consumidor
  *
  * Por que hace falta: la paleta CSS retinta textos, botones y trazos, pero el
  * color de las flores, mariposas, la corona y el sobre esta dentro del pixel.
  * Sin este paso, cambiar de paleta deja las decoraciones moradas.
  *
- * Escribe UNA sola carpeta, src/Images/theme/, con nombres neutros. Es a
+ * Escribe UNA sola carpeta, src/images/theme/, con nombres neutros. Es a
  * proposito que no se guarde una carpeta por paleta: lib/assets.ts las
  * importa con import.meta.glob, y tener seis juegos metia los seis en el
  * build (14.8 MB en vez de 9).
+ *
+ * Este script vive en el paquete compartido, pero la configuracion de la
+ * invitacion (que paleta usa) vive en cada consumidor. Por eso `--config`
+ * recibe la ruta a ese archivo, resuelta contra el directorio desde el que se
+ * invoca el comando (el consumidor lo pasa relativo a su propia raiz).
  */
 import { readFile, writeFile, mkdir, rm, access, copyFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import { makeRecolor, hexToRgb, rgbToHex } from "./lib/color.mjs";
-import { palettes } from "../src/config/palettes.ts";
+import { palettes } from "../src/palettes.ts";
 
 const raiz = join(dirname(fileURLToPath(import.meta.url)), "..");
-const IMAGENES = join(raiz, "src", "Images");
+const IMAGENES = join(raiz, "src", "images");
 
 /** La paleta en la que estan pintados los archivos originales. */
 const ORIGEN = palettes.lila;
@@ -130,21 +136,26 @@ async function generar(nombrePaleta) {
 }
 
 /**
- * Lee el nombre de la paleta de la configuracion.
+ * Lee el nombre de la paleta de la configuracion del consumidor.
  *
- * Se lee el texto en vez de importar el modulo a proposito: config/invitation
- * importa las fotos (.jpeg), y Node no sabe resolver eso fuera de Astro.
+ * Se lee el texto en vez de importar el modulo a proposito: la config del
+ * consumidor (p. ej. config/invitation.ts) importa fotos (.jpeg), y Node no
+ * sabe resolver eso fuera de Astro.
  */
-async function paletaDeLaConfig() {
-  const texto = await readFile(join(raiz, "src", "config", "invitation.ts"), "utf8");
+async function paletaDeLaConfig(rutaConfig) {
+  const texto = await readFile(rutaConfig, "utf8");
   return texto.match(/palette:\s*palettes\.(\w+)/)?.[1];
 }
 
-// Sin argumento se usa la paleta de la invitacion, que es lo que evita que las
-// decoraciones y el CSS acaben en gamas distintas.
+// Sin argumento se usa la paleta de la config indicada con --config, que es
+// lo que evita que las decoraciones y el CSS acaben en gamas distintas.
 const argumentos = process.argv.slice(2);
 const forzar = argumentos.includes("--force");
-const activa = argumentos.find((a) => !a.startsWith("--")) ?? (await paletaDeLaConfig());
+const indiceConfig = argumentos.indexOf("--config");
+const rutaConfig = indiceConfig === -1 ? undefined : resolve(process.cwd(), argumentos[indiceConfig + 1]);
+const activa =
+  argumentos.find((a, i) => !a.startsWith("--") && argumentos[i - 1] !== "--config") ??
+  (rutaConfig && (await paletaDeLaConfig(rutaConfig)));
 
 /** true si la carpeta ya contiene el juego pedido y no falta ningun archivo. */
 async function yaGenerado(nombre) {
@@ -162,7 +173,7 @@ async function yaGenerado(nombre) {
 
 if (!activa) {
   console.error(
-    "No se pudo deducir la paleta: la invitacion usa una escrita a mano. " +
+    "No se pudo deducir la paleta: falta --config <ruta-a-la-config> o un nombre de paleta. " +
       `Indica en cual repintar: pnpm run assets -- <${Object.keys(palettes).join("|")}>`,
   );
   process.exitCode = 1;
@@ -177,6 +188,6 @@ if (!activa) {
       join(IMAGENES, "theme", "theme.json"),
       JSON.stringify({ palette: activa }, null, 2),
     );
-    console.log(`Listo: src/Images/theme/ contiene el juego "${activa}".`);
+    console.log(`Listo: src/images/theme/ contiene el juego "${activa}".`);
   }
 }

@@ -141,7 +141,7 @@ body {
   background-color: var(--color-base);
   /* Trama en morado oscuro, no blanca: sobre el fondo lila claro el ruido
      blanco original solo variaba 4 niveles de color y era invisible. */
-  background-image: url('../Images/noise-soft.png');
+  background-image: url('../images/noise-soft.png');
   /* background-size: 300px; */
 }
 

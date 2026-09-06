@@ -23,5 +23,5 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# Decoraciones repintadas: las genera 'pnpm run assets' desde src/Images/
-src/Images/theme/
+# Decoraciones repintadas: las genera 'pnpm run assets' desde packages/invitacion-ui/src/images/
+packages/invitacion-ui/src/images/theme/
