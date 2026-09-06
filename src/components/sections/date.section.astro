@@ -6,9 +6,10 @@ import { SECTION_VARS } from "../../lib/layout";
 
 interface Props {
   date: Date;
+  googleCalendarUrl: string;
 }
 
-const { date } = Astro.props;
+const { date, googleCalendarUrl } = Astro.props;
 ---
 
 <div
@@ -30,6 +31,6 @@ const { date } = Astro.props;
   >
     <SideDecor kind="globos" class="block w-full h-auto" />
   </div>
-  <CalendarComponent date={date} class="relative" />
+  <CalendarComponent date={date} googleCalendarUrl={googleCalendarUrl} class="relative" />
   <CountdownComponent date={date} class="relative" />
 </div>

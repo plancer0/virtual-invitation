@@ -1,12 +1,15 @@
 ---
-import { GOOGLE_CALENDAR_URL } from "../../lib/event";
-
 interface Props {
   date: Date;
+  /** Enlace de "agregar a Google Calendar". Llega por prop y no se importa del
+   *  modulo del evento: este componente se comparte entre invitaciones, y una
+   *  pieza compartida que alcanza los datos de un cliente concreto deja de
+   *  poder reutilizarse. */
+  googleCalendarUrl: string;
   class?: string;
 }
 
-const { date, class: className } = Astro.props;
+const { date, googleCalendarUrl, class: className } = Astro.props;
 
 const year = date.getFullYear();
 const month = date.getMonth();
@@ -45,7 +48,7 @@ const monthLabel = date.toLocaleDateString("es-ES", { month: "long", year: "nume
             <button
               type="button"
               class="day-button"
-              data-google-url={GOOGLE_CALENDAR_URL}
+              data-google-url={googleCalendarUrl}
               aria-label={`Agregar el ${day} a mi calendario`}
             >
               {day}
@@ -64,7 +67,7 @@ const monthLabel = date.toLocaleDateString("es-ES", { month: "long", year: "nume
       )
     }
   </div>
-  <button type="button" class="calendar-hint" data-google-url={GOOGLE_CALENDAR_URL}>
+  <button type="button" class="calendar-hint" data-google-url={googleCalendarUrl}>
     Toca el día para agendarlo
   </button>
 </div>

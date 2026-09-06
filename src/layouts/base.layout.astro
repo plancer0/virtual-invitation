@@ -3,7 +3,6 @@ import "../styles/global.css";
 import type { Palette } from "../types/palette";
 import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
-import { invitation } from "../config/invitation";
 import { checkPalette, paletteToStyle, resolvePalette } from "../lib/palette";
 
 interface Props {
@@ -12,11 +11,14 @@ interface Props {
   lang?: string;
   /** Clases para el <body>: la portada anula el centrado del body global. */
   bodyClass?: string;
-  /** Permite que una pagina use otra paleta que la de la invitacion. */
-  palette?: Palette;
+  /** La paleta con la que se pinta todo. Es obligatoria y no tiene defecto a
+   *  proposito: el layout se comparte entre invitaciones, y si leyera la
+   *  configuracion de una en concreto dejaria de poder reutilizarse. Quien
+   *  conoce al cliente es la pagina, y es ella quien la inyecta. */
+  palette: Palette;
 }
 
-const { title, lang = "es", palette = invitation.palette, bodyClass } = Astro.props;
+const { title, lang = "es", palette, bodyClass } = Astro.props;
 
 // Las variables van en el <html> y no en el <body>: el fondo de la pagina se
 // pinta sobre el elemento raiz, y asi tambien lo ven las capas de la
