@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/* Tailwind escanea desde la raiz del proyecto que compila. Cuando la app vive
+   en la raiz del repo, la libreria queda por debajo y la encuentra sola; pero
+   una invitacion generada vive AL LADO de la libreria, no dentro, y entonces
+   no ve ni una sola de sus clases: se quedaba sin tokens y los titulos caian a
+   16px. Esta ruta es relativa a este archivo, asi que apunta al codigo de la
+   libreria venga de donde venga quien lo importe. */
+@source "../";
+
 @theme {
   --font-baskervville: var(--baskervville);
   --font-baskervville-sc: var(--baskervville-sc);

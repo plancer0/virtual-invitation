@@ -1,0 +1,54 @@
+---
+import BaseLayout from "@invitacion/ui/layouts/base.layout.astro";
+import Frame from "@invitacion/ui/components/frame/frame.component.astro";
+import MusicPlayer from "@invitacion/ui/components/music-player/music-player.component.astro";
+import RevealOnScroll from "@invitacion/ui/components/reveal-on-scroll/reveal-on-scroll.component.astro";
+import TransitionAnchor from "@invitacion/ui/components/transition-anchor/transition-anchor.component.astro";
+import HeroSection from "@invitacion/ui/components/sections/hero.section.astro";
+import PhotosSection from "@invitacion/ui/components/sections/photos.section.astro";
+import ParentsSection from "@invitacion/ui/components/sections/parents.section.astro";
+import DateSection from "@invitacion/ui/components/sections/date.section.astro";
+import DetailsSection from "@invitacion/ui/components/sections/details.section.astro";
+import ClosingSection from "@invitacion/ui/components/sections/closing.section.astro";
+import { invitation } from "../config/invitation";
+import { GOOGLE_CALENDAR_URL } from "../lib/event";
+import { FRAME_PADDING, FRAME_WIDTH } from "@invitacion/ui/lib/layout.ts";
+---
+
+<BaseLayout palette={invitation.palette} title={`Invitacion de ${invitation.name}`}>
+  <TransitionAnchor name="carta" />
+
+  <Frame width={FRAME_WIDTH} border="3px solid var(--color-accent)" padding="2px">
+    <Frame
+      padding={FRAME_PADDING}
+      gap="clamp(20px, 4vw, 36px)"
+      border="none"
+      class="justify-center items-center"
+    >
+      <HeroSection intro={invitation.texts.intro} />
+
+      <PhotosSection
+        name={invitation.name}
+        caption={invitation.texts.photos}
+        photos={invitation.photos}
+      />
+
+      <ParentsSection parents={invitation.parents} />
+
+      <DateSection date={invitation.date} googleCalendarUrl={GOOGLE_CALENDAR_URL} />
+
+      <DetailsSection
+        date={invitation.date}
+        venue={invitation.venue}
+        dressCode={invitation.dressCode}
+        rsvp={invitation.rsvp}
+        giftText={invitation.texts.gift}
+      />
+
+      <ClosingSection text={invitation.texts.closing} />
+    </Frame>
+  </Frame>
+
+  <MusicPlayer />
+  <RevealOnScroll />
+</BaseLayout>

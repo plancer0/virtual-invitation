@@ -1,0 +1,136 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@invitacion/ui/layouts/base.layout.astro";
+import Title from "@invitacion/ui/components/Title/title.component.astro";
+import { invitation } from "../config/invitation";
+import { asset } from "@invitacion/ui/lib/assets.ts";
+
+const carta = asset("carta");
+const mariposa = asset("mariposas-silueta");
+
+const quinceaneraName = invitation.name;
+
+// Mariposas saliendo de detras del sobre. Se escalonan en tamano, giro y
+// posicion para que se lean como un vuelo y no como copias de la misma imagen.
+const mariposas = [
+  { clase: "top-[-6%] left-[4%] w-[18%] rotate-[-28deg]", retardo: "0s" },
+  { clase: "top-[6%] left-[-8%] w-[26%] rotate-[-14deg]", retardo: "0.9s" },
+  { clase: "top-[-14%] left-[34%] w-[15%] rotate-[8deg]", retardo: "1.8s" },
+  { clase: "top-[-8%] right-[6%] w-[23%] rotate-[22deg]", retardo: "0.5s" },
+  { clase: "top-[14%] right-[-9%] w-[17%] rotate-[36deg]", retardo: "1.4s" },
+];
+---
+
+<BaseLayout palette={invitation.palette} title={`${quinceaneraName} · Mis quince años`} bodyClass="portada">
+    <main class="flex min-h-[100dvh] w-full flex-col items-center justify-center gap-[clamp(6px,2vw,14px)] px-[clamp(20px,7vw,60px)] py-[clamp(30px,8vw,70px)]">
+      <Title
+        fontFamily="var(--font-meaculpa)"
+        size="name-lg"
+        color="var(--color-accent)"
+        class="leading-[0.9]"
+      >
+        {quinceaneraName}
+      </Title>
+
+      <!-- Desplazado a la derecha respecto al nombre. -->
+      <p
+        class="self-center translate-x-[clamp(30px,12vw,110px)] font-baskervville-sc text-ink text-lead tracking-[0.12em] uppercase"
+      >
+        Mis quince años
+      </p>
+
+      <div class="relative mt-[clamp(28px,7vw,56px)] w-[clamp(230px,66vw,430px)]">
+        {
+          mariposas.map(({ clase, retardo }) => (
+            <img
+              src={mariposa.src}
+              alt=""
+              aria-hidden="true"
+              class:list={["mariposa-vuelo absolute h-auto", clase]}
+              style={`animation-delay: ${retardo};`}
+            />
+          ))
+        }
+
+        <!-- El mismo transition:name esta en el marco de la invitacion: el
+             navegador interpola una caja en la otra, asi que el sobre se
+             transforma en la invitacion en lugar de un simple fundido. -->
+        <a
+          href="/invitacion"
+          class="sobre relative block"
+          transition:name="carta"
+          aria-label="Abrir la invitación"
+        >
+          <Image
+            src={carta}
+            widths={[430, 860]}
+            sizes="(max-width: 480px) 66vw, 430px"
+            alt="Sobre con la invitación"
+            class="block w-full h-auto"
+          />
+        </a>
+      </div>
+
+      <p
+        class="mt-[clamp(20px,5vw,36px)] font-baskervville text-ink text-body text-center"
+      >
+        Presiona el sobre para abrirlo
+      </p>
+    </main>
+</BaseLayout>
+
+<!-- El <body> lo pinta el layout, asi que su regla no puede ir con el ambito
+     de esta pagina. Es la unica que se declara global; el resto queda acotado
+     a la portada. -->
+<style is:global>
+  /* Mismo fondo que la invitacion: color base de la paleta con la trama de
+     ruido. El body global ya lo trae, aqui solo se anula su centrado flex
+     para que la portada ocupe todo el alto. */
+  body.portada {
+    min-height: 100dvh;
+    display: block;
+    padding: 0;
+  }
+</style>
+
+<style>
+  /* Las mariposas quedan detras del sobre, que va en su propia capa. */
+  .mariposa-vuelo {
+    z-index: 0;
+    opacity: 0.85;
+    animation: aletear 5.5s ease-in-out infinite;
+  }
+
+  .sobre {
+    z-index: 1;
+    transition: transform 0.35s ease;
+    filter: drop-shadow(0 10px 18px rgba(64, 56, 72, 0.22));
+  }
+
+  .sobre:hover,
+  .sobre:focus-visible {
+    transform: translateY(-6px) scale(1.02);
+  }
+
+  /* Solo transform y opacity: lo resuelve el compositor sin repintar. */
+  @keyframes aletear {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: translate3d(0, -10px, 0) scale(1.04);
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mariposa-vuelo {
+      animation: none;
+    }
+    .sobre {
+      transition: none;
+    }
+  }
+</style>

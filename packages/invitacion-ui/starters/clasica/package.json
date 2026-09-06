@@ -1,5 +1,5 @@
 {
-  "name": "virtual-invitation",
+  "name": "mi-invitacion",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -7,12 +7,11 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "node packages/invitacion-ui/scripts/recolor-assets.mjs --config src/config/invitation.ts && astro check && astro build",
+    "build": "node node_modules/@invitacion/ui/scripts/recolor-assets.mjs --config src/config/invitation.ts && astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "assets": "node packages/invitacion-ui/scripts/recolor-assets.mjs --force --config src/config/invitation.ts",
-    "check": "astro check",
-    "crear": "node packages/invitacion-ui/scripts/create-invitation.mjs"
+    "assets": "node node_modules/@invitacion/ui/scripts/recolor-assets.mjs --force --config src/config/invitation.ts",
+    "check": "astro check"
   },
   "dependencies": {
     "@invitacion/ui": "workspace:*",
